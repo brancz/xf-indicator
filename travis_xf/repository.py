@@ -63,7 +63,7 @@ class Repository:
         hbox.pack_start(label, True, True, 0)
         hbox.pack_start(remove_button, False, True, 0)
 
-        listbox.prepend(row)
+        listbox.add(row)
 
         #show all of them
         hbox.show()
@@ -104,3 +104,9 @@ class RepositoryList:
     def add_all_to_listbox(self, listbox):
         for repo in self.repositories:
             repo.add_to_listbox(listbox)
+    
+    def clone(self):
+        clone = RepositoryList()
+        for repo in self.repositories:
+            clone.add_repository(repo)
+        return clone

@@ -17,6 +17,7 @@ class BuildStatus(Enum):
     failed       = ("ubuntuone-client-error")
     not_existing = ("ubuntuone-client-offline")
     unknown      = ("ubuntuone-client-paused")
+    active       = ("ubuntuone-client-updating")
 
     def __init__(self, icon_name):
         self.icon_name = icon_name

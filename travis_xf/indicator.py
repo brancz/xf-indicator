@@ -5,6 +5,7 @@ import sys
 
 from repository import Repository, RepositoryList
 from preferences_window import PreferencesWindow
+from build_status import BuildStatus
 from gi.repository import AppIndicator3
 from gi.repository import GObject, Gtk, GLib
 
@@ -28,7 +29,9 @@ class Indicator:
         self.preferences_window = PreferencesWindow(self.repositories, self.return_from_preferences_callback)
         self.preferences_window.show_all()
 
-    def return_from_preferences_callback(self, a, b):
+    def return_from_preferences_callback(self, new_repositories):
+        self.repositories = new_repositories
+        BuildStatus.active.set_indicator_icon(self.indicator)
         self.menu_setup()
         self.indicator.set_menu(self.menu)
 
