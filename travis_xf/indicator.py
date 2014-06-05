@@ -1,41 +1,56 @@
 #!/usr/bin/env python
 
-import sys
-import gtk
-import appindicator
 import requests
+import sys
+
 from repository import Repository, RepositoryList
+from preferences_window import PreferencesWindow
+from gi.repository import AppIndicator3
+from gi.repository import GObject, Gtk, GLib
 
 PING_FREQUENCY = 10 # seconds
 
 class Indicator:
     def __init__(self):
-        self.indicator = appindicator.Indicator("travis-xf",
+        self.indicator = AppIndicator3.Indicator.new("travis-xf",
                                           "ubuntuone-client-idle",
-                                          appindicator.CATEGORY_APPLICATION_STATUS)
+                                          AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
 
-        self.indicator.set_status(appindicator.STATUS_ACTIVE)
+        self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
 
         self.repositories = RepositoryList()
-        #self.repositories.addRepository("flower-pot/travis-xf")
+        self.repositories.add_repository(Repository("openpizza/openpizza"))
 
         self.menu_setup()
         self.indicator.set_menu(self.menu)
 
+    def on_preferences_activate(self, widget):
+        self.preferences_window = PreferencesWindow(self.repositories, self.return_from_preferences_callback)
+        self.preferences_window.show_all()
+
+    def return_from_preferences_callback(self, a, b):
+        self.menu_setup()
+        self.indicator.set_menu(self.menu)
+
     def menu_setup(self):
-        self.menu = gtk.Menu()
+        self.menu = Gtk.Menu()
 
         self.repositories.create_menu_items(self.menu)
 
-        self.quit_item = gtk.MenuItem("Quit")
+        self.preferences_item = Gtk.MenuItem("Preferences")
+        self.preferences_item.connect("activate", self.on_preferences_activate)
+        self.preferences_item.show()
+        self.menu.append(self.preferences_item)
+
+        self.quit_item = Gtk.MenuItem("Quit")
         self.quit_item.connect("activate", self.quit)
         self.quit_item.show()
         self.menu.append(self.quit_item)
 
     def main(self):
         self.check_all_build_statuses()
-        gtk.timeout_add(PING_FREQUENCY * 1000, self.check_all_build_statuses)
-        gtk.main()
+        GLib.timeout_add_seconds(PING_FREQUENCY, self.check_all_build_statuses)
+        Gtk.main()
 
     def quit(self, widget):
         sys.exit(0)

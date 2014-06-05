@@ -10,8 +10,8 @@
 """
 
 import json, requests
-import gtk
 import webbrowser
+from gi.repository import GObject, Gtk
 from build_status import BuildStatus
 
 class Repository:
@@ -48,18 +48,34 @@ class Repository:
         webbrowser.open(Repository.travis_base_url + self.slug)
 
     def add_menu_item(self, menu):
-        self.menu_item = gtk.ImageMenuItem(self.slug)
+        self.menu_item = Gtk.ImageMenuItem(self.slug)
         self.menu_item.set_always_show_image(True)
         self.menu_item.connect("activate", self.handle_push)
         self.menu_item.show()
         menu.append(self.menu_item)
 
+    def add_to_listbox(self, listbox):
+        row = Gtk.ListBoxRow()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
+        row.add(hbox)
+        label = Gtk.Label(self.slug, xalign=0)
+        remove_button = Gtk.Button("Remove")
+        hbox.pack_start(label, True, True, 0)
+        hbox.pack_start(remove_button, False, True, 0)
+
+        listbox.prepend(row)
+
+        #show all of them
+        hbox.show()
+        row.show()
+        label.show()
+        remove_button.show()
+
 class RepositoryList:
     def __init__(self):
         self.repositories = []
 
-    def addRepository(self, slug):
-        repository = Repository(slug)
+    def add_repository(self, repository):
         self.repositories.append(repository)
 
     def status(self):
@@ -84,3 +100,7 @@ class RepositoryList:
     def create_menu_items(self, menu):
         for repository in self.repositories:
             repository.add_menu_item(menu)
+    
+    def add_all_to_listbox(self, listbox):
+        for repo in self.repositories:
+            repo.add_to_listbox(listbox)

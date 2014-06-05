@@ -9,8 +9,7 @@
     :license: MIT, see LICENSE for more details.
 """
 
-import gtk
-import appindicator
+from gi.repository import Gtk
 from enum import Enum
 
 class BuildStatus(Enum):
@@ -26,5 +25,5 @@ class BuildStatus(Enum):
         indicator.set_icon(self.icon_name)
 
     def set_menu_item_icon(self, menu_item):
-        img = gtk.image_new_from_icon_name(self.icon_name, gtk.ICON_SIZE_MENU)
+        img = Gtk.Image.new_from_icon_name(self.icon_name, Gtk.IconSize.MENU)
         menu_item.set_image(img)
