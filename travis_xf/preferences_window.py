@@ -44,14 +44,15 @@ class PreferencesWindow(Gtk.Window):
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
         row.add(hbox)
         self.entry = Gtk.Entry(xalign=0)
+        self.entry.connect("activate", self.add_repo)
         remove_button = Gtk.Button("Add")
-        remove_button.connect("clicked", self.add_repo_clicked)
+        remove_button.connect("clicked", self.add_repo)
         hbox.pack_start(self.entry, True, True, 0)
         hbox.pack_start(remove_button, False, True, 0)
 
         self.superlistbox.add(row)
 
-    def add_repo_clicked(self, widget):
+    def add_repo(self, widget):
         repo_entry_text = self.entry.get_text()
         if repo_entry_text != "":
             repo = Repository(repo_entry_text)
