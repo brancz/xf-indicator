@@ -55,6 +55,6 @@ class PreferencesWindow(Gtk.Window):
         repo_entry_text = self.entry.get_text()
         if repo_entry_text != "":
             repo = Repository(repo_entry_text)
-            repo.add_to_listbox(self.listbox)
+            repo.add_to_listbox(self.listbox, self.repositories.remove_from_listbox_callback)
             self.repositories.add_repository(repo)
             self.entry.set_text("")

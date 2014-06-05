@@ -54,12 +54,18 @@ class Repository:
         self.menu_item.show()
         menu.append(self.menu_item)
 
-    def add_to_listbox(self, listbox):
+    def add_to_listbox(self, listbox, remove_callback):
         row = Gtk.ListBoxRow()
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
         row.add(hbox)
         label = Gtk.Label(self.slug, xalign=0)
         remove_button = Gtk.Button("Remove")
+        def remove_clicked(widget):
+            listbox = widget.get_parent().get_parent().get_parent()
+            listboxrow = widget.get_parent().get_parent()
+            listbox.remove(listboxrow)
+            remove_callback(self)
+        remove_button.connect("clicked", remove_clicked)
         hbox.pack_start(label, True, True, 0)
         hbox.pack_start(remove_button, False, True, 0)
 
@@ -103,7 +109,10 @@ class RepositoryList:
     
     def add_all_to_listbox(self, listbox):
         for repo in self.repositories:
-            repo.add_to_listbox(listbox)
+            repo.add_to_listbox(listbox, self.remove_from_listbox_callback)
+
+    def remove_from_listbox_callback(self, repo):
+        self.repositories.remove(repo)
     
     def clone(self):
         clone = RepositoryList()
