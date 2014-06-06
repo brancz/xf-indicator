@@ -36,6 +36,7 @@ class PreferencesWindow(Gtk.Window):
 
         self.connect("delete-event", self.quit)
         self.set_position(Gtk.WindowPosition.CENTER)
+        self.show_all()
 
     def quit(self, a, b):
         self.return_from_preferences_callback(self.repositories)
