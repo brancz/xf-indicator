@@ -51,7 +51,7 @@ class Indicator:
 
     def setup_refresh_timer(self):
         # we want to execute immediately and then start the cycle
-        #self.check_all_build_statuses()
+        BuildStatus.active.set_indicator_icon(self.indicator)
         self.refresh_timer = threading.Timer(REFRESH_INTERVAL, self.check_all_build_statuses)
         self.refresh_timer.start()
 
