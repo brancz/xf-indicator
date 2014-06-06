@@ -35,6 +35,7 @@ class PreferencesWindow(Gtk.Window):
         self.add_add_repo_button()
 
         self.connect("delete-event", self.quit)
+        self.set_position(Gtk.WindowPosition.CENTER)
 
     def quit(self, a, b):
         self.return_from_preferences_callback(self.repositories)
@@ -45,10 +46,10 @@ class PreferencesWindow(Gtk.Window):
         row.add(hbox)
         self.entry = Gtk.Entry(xalign=0)
         self.entry.connect("activate", self.add_repo)
-        remove_button = Gtk.Button("Add")
-        remove_button.connect("clicked", self.add_repo)
+        add_button = Gtk.Button("Add")
+        add_button.connect("clicked", self.add_repo)
         hbox.pack_start(self.entry, True, True, 0)
-        hbox.pack_start(remove_button, False, True, 0)
+        hbox.pack_start(add_button, False, True, 0)
 
         self.superlistbox.add(row)
 
