@@ -26,6 +26,8 @@ class Indicator:
 
         self.indicator.set_menu(self.build_menu())
 
+        self.setup_refresh_timer()
+
     def on_preferences_activate(self, widget):
         self.preferences_window = PreferencesWindow(self.repositories, self.return_from_preferences_callback)
 
@@ -51,7 +53,6 @@ class Indicator:
         menu.append(item)
 
     def setup_refresh_timer(self):
-        # we want to execute immediately and then start the cycle
         BuildStatus.active.set_indicator_icon(self.indicator)
         self.refresh_timer = threading.Timer(REFRESH_INTERVAL, self.check_all_build_statuses)
         self.refresh_timer.start()
@@ -63,9 +64,6 @@ class Indicator:
     def check_all_build_statuses(self):
         self.repositories.set_indicator_icon(self.indicator)
 
-    def main(self):
-        self.setup_refresh_timer()
-        Gtk.main()
-
     def quit(self, widget):
-        sys.exit(0)
+        self.refresh_timer.cancel()
+        Gtk.main_quit()

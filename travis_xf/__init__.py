@@ -10,6 +10,8 @@
 """
 
 from indicator import Indicator
+from gi.repository import Gtk
 
-ind = Indicator()
-ind.main()
+def main():
+    travis_xf_indicator = Indicator()
+    Gtk.main()
