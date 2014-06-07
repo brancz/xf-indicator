@@ -53,12 +53,7 @@ class Repository(object):
         menu.append(self.menu_item)
 
     def add_to_listbox(self, listbox, remove_callback):
-        def remove_clicked(widget):
-            list_box = widget.get_parent().get_parent().get_parent()
-            list_box_row = widget.get_parent().get_parent()
-            list_box.remove(list_box_row)
-            remove_callback(self)
-        listbox.add(RepositoryListBoxRow.factory(self.slug, remove_clicked))
+        listbox.add(RepositoryListBoxRow.factory(self, self.slug, remove_callback))
 
 class RepositoryList(object):
     def __init__(self):
