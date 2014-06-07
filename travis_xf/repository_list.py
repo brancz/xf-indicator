@@ -21,6 +21,8 @@ class RepositoryList(object):
     def status(self):
         build_status = lambda repo: repo.build_status()
         statuses = map(build_status, self.repositories)
+        for status in statuses:
+            print status
         statuses = filter(lambda x: x != BuildStatus.passing, statuses)
         if not statuses:
             return BuildStatus.passing

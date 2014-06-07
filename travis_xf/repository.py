@@ -23,6 +23,7 @@ class Repository(object):
         self.slug = slug
 
     def build_status(self):
+        print "status: " + self.slug
         response = requests.get(Repository.travis_base_api_url + self.slug)
         if response.status_code == requests.codes.not_found:
             status = BuildStatus.not_existing
