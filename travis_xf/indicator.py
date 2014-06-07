@@ -4,7 +4,8 @@ import requests
 import sys
 import threading
 
-from repository import Repository, RepositoryList
+from repository import Repository
+from repository_list import RepositoryList
 from preferences_window import PreferencesWindow
 from build_status import BuildStatus
 from gi.repository import AppIndicator3
