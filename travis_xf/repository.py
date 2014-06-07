@@ -11,10 +11,11 @@
 
 import json, requests
 import webbrowser
-from gi.repository import GObject, Gtk
 from build_status import BuildStatus
+from repository_list_box_row import RepositoryListBoxRow
+from repository_menu_item import RepositoryMenuItem
 
-class Repository:
+class Repository(object):
     travis_base_api_url = "https://api.travis-ci.org/repos/"
     travis_base_url = "https://travis-ci.org/"
     
@@ -44,40 +45,22 @@ class Repository:
         status.set_menu_item_icon(self.menu_item)
         return status
 
-    def handle_push(self, widget):
+    def open_in_webbrowser(self, widget):
         webbrowser.open(Repository.travis_base_url + self.slug)
 
     def add_menu_item(self, menu):
-        self.menu_item = Gtk.ImageMenuItem(self.slug)
-        self.menu_item.set_always_show_image(True)
-        self.menu_item.connect("activate", self.handle_push)
-        self.menu_item.show()
+        self.menu_item = RepositoryMenuItem.factory(self.slug, self.open_in_webbrowser)
         menu.append(self.menu_item)
 
     def add_to_listbox(self, listbox, remove_callback):
-        row = Gtk.ListBoxRow()
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
-        row.add(hbox)
-        label = Gtk.Label(self.slug, xalign=0)
-        remove_button = Gtk.Button("Remove")
         def remove_clicked(widget):
-            listbox = widget.get_parent().get_parent().get_parent()
-            listboxrow = widget.get_parent().get_parent()
-            listbox.remove(listboxrow)
+            list_box = widget.get_parent().get_parent().get_parent()
+            list_box_row = widget.get_parent().get_parent()
+            list_box.remove(list_box_row)
             remove_callback(self)
-        remove_button.connect("clicked", remove_clicked)
-        hbox.pack_start(label, True, True, 0)
-        hbox.pack_start(remove_button, False, True, 0)
+        listbox.add(RepositoryListBoxRow.factory(self.slug, remove_clicked))
 
-        listbox.add(row)
-
-        #show all of them
-        hbox.show()
-        row.show()
-        label.show()
-        remove_button.show()
-
-class RepositoryList:
+class RepositoryList(object):
     def __init__(self):
         self.repositories = []
 

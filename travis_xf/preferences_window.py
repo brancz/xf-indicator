@@ -38,7 +38,7 @@ class PreferencesWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
 
-    def quit(self, a, b):
+    def quit(self, window, event):
         self.return_from_preferences_callback(self.repositories)
 
     def add_add_repo_button(self):
