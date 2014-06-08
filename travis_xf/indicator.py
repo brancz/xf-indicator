@@ -24,6 +24,7 @@ class Indicator:
         self.repositories = RepositoryList()
         self.repositories.add_repository(Repository("openpizza/openpizza"))
 
+        BuildStatus.active.set_indicator_icon(self.indicator)
         self.indicator.set_menu(self.build_menu())
 
         self.refresh_thread = None
@@ -36,6 +37,7 @@ class Indicator:
     def return_from_preferences_callback(self, new_repositories):
         # set new repositories and reset connected components
         self.wait_for_refresh()
+        BuildStatus.active.set_indicator_icon(self.indicator)
         self.repositories = new_repositories
         self.indicator.set_menu(self.build_menu())
 
