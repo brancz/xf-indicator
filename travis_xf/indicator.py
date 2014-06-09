@@ -36,7 +36,6 @@ class Indicator:
 
     def return_from_preferences_callback(self, new_repositories):
         # set new repositories and reset connected components
-        self.wait_for_refresh()
         BuildStatus.active.set_indicator_icon(self.indicator)
         self.repositories = new_repositories
         self.indicator.set_menu(self.build_menu())
@@ -57,19 +56,11 @@ class Indicator:
         menu.append(item)
 
     def setup_refresh_timer(self):
-        self.check_all_build_statuses
         GLib.timeout_add_seconds(REFRESH_INTERVAL, self.check_all_build_statuses)
 
     def check_all_build_statuses(self):
-        self.wait_for_refresh()
-        self.refresh_thread = threading.Thread(target=self.repositories.set_indicator_icon, args=(self.indicator,))
-        self.refresh_thread.daemon = True
-        self.refresh_thread.start()
+        self.repositories.set_indicator_icon(self.indicator)
         return True
-
-    def wait_for_refresh(self):
-        if self.refresh_thread and self.refresh_thread.isAlive():
-            self.refresh_thread.join()
 
     def quit(self, widget):
         Gtk.main_quit()
