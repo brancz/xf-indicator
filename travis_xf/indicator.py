@@ -22,7 +22,7 @@ class Indicator:
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
 
         self.repositories = RepositoryList()
-        self.repositories.add_repository(Repository("openpizza/openpizza"))
+        self.repositories.load()
 
         BuildStatus.active.set_indicator_icon(self.indicator)
         self.indicator.set_menu(self.build_menu())
@@ -63,4 +63,5 @@ class Indicator:
         return True
 
     def quit(self, widget):
+        self.repositories.save()
         Gtk.main_quit()
