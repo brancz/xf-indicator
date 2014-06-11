@@ -11,7 +11,7 @@ from build_status import BuildStatus
 from gi.repository import AppIndicator3
 from gi.repository import GObject, Gtk, GLib
 
-REFRESH_INTERVAL = 10
+REFRESH_INTERVAL = 3
 
 class Indicator:
     def __init__(self):
@@ -29,16 +29,19 @@ class Indicator:
 
         self.refresh_thread = None
 
+        self.editing_preferences = False
         self.setup_refresh_timer()
 
     def on_preferences_activate(self, widget):
         self.preferences_window = PreferencesWindow(self.repositories, self.return_from_preferences_callback)
+        self.editing_preferences = True
 
     def return_from_preferences_callback(self, new_repositories):
         # set new repositories and reset connected components
         BuildStatus.active.set_indicator_icon(self.indicator)
         self.repositories = new_repositories
         self.indicator.set_menu(self.build_menu())
+        self.editing_preferences = False
 
     def build_menu(self):
         menu = Gtk.Menu()
@@ -59,7 +62,8 @@ class Indicator:
         GLib.timeout_add_seconds(REFRESH_INTERVAL, self.check_all_build_statuses)
 
     def check_all_build_statuses(self):
-        self.repositories.set_indicator_icon(self.indicator)
+        if not self.editing_preferences:
+            self.repositories.set_indicator_icon(self.indicator)
         return True
 
     def quit(self, widget):
