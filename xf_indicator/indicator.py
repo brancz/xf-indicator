@@ -14,7 +14,7 @@ from gi.repository import Gtk
 
 class Indicator:
     def __init__(self):
-        self.indicator = AppIndicator3.Indicator.new("travis-xf",
+        self.indicator = AppIndicator3.Indicator.new("xf-indicator",
                                           "ubuntuone-client-idle",
                                           AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
 

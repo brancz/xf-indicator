@@ -13,30 +13,27 @@ from build_status import BuildStatus
 import yaml
 import os
 
-CONFIG_FILE=os.path.expanduser("~/.travis-xf.yaml")
+CONFIG_FILE=os.path.expanduser("~/.xf-indicator.yaml")
 
 class RepositoryList(object):
     def load(self):
         try:
             f = open(CONFIG_FILE, 'r')
-            self.repositories = yaml.load(f)
         except IOError:
             print "Config file not found."
-        finally:
-            if f:
-                f.close()
+        else:
+            self.repositories = yaml.load(f)
+            f.close()
 
     def save(self):
         try:
             print "Saving config to " + CONFIG_FILE
             f = open(CONFIG_FILE, 'w')
-            yaml.dump(self.repositories, f)
-            f.close()
         except IOError:
             print "Could not save config."
-        finally:
-            if f:
-                f.close()
+        else:
+            yaml.dump(self.repositories, f)
+            f.close()
 
     def __init__(self):
         self.repositories = []

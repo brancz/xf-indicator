@@ -13,5 +13,5 @@ from indicator import Indicator
 from gi.repository import Gtk
 
 def main():
-    travis_xf_indicator = Indicator()
+    xf_indicator = Indicator()
     Gtk.main()
