@@ -9,7 +9,7 @@
     :license: MIT, see LICENSE for more details.
 """
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 from enum import Enum
 
 class BuildStatus(Enum):
@@ -23,8 +23,8 @@ class BuildStatus(Enum):
         self.icon_name = icon_name
 
     def set_indicator_icon(self, indicator):
-        indicator.set_icon(self.icon_name)
+        GObject.idle_add(lambda: indicator.set_icon(self.icon_name))
 
     def set_menu_item_icon(self, menu_item):
         img = Gtk.Image.new_from_icon_name(self.icon_name, Gtk.IconSize.MENU)
-        menu_item.set_image(img)
+        GObject.idle_add(lambda: menu_item.set_image(img))
