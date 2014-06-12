@@ -10,20 +10,29 @@
 """
 
 import time
-import threading
+from threading import Thread, Event
 
-REFRESH_INTERVAL = 3
+REFRESH_INTERVAL = 10
 
-class TimerWithTrigger(object):
+class TimerWithResume(object):
     def __init__(self, function):
         self.function = function
+        self.abort = Event()
 
     def perform(self):
-        while True:
+        while not self.abort.isSet():
             self.function()
-            time.sleep(3)
+            self.abort.wait(REFRESH_INTERVAL)
+
+    def stop(self):
+        self.abort.set()
 
     def start(self):
-        self.thread = threading.Thread(target=self.perform)
+        self.thread = Thread(target=self.perform)
         self.thread.daemon = True
         self.thread.start()
+
+    def resume(self):
+        self.thread.join()
+        self.abort.clear()
+        self.start()

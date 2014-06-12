@@ -8,7 +8,7 @@ from repository import Repository
 from repository_list import RepositoryList
 from preferences_window import PreferencesWindow
 from build_status import BuildStatus
-from timer_with_trigger import TimerWithTrigger
+from timer_with_resume import TimerWithResume
 from gi.repository import AppIndicator3
 from gi.repository import Gtk
 
@@ -30,12 +30,14 @@ class Indicator:
 
     def on_preferences_activate(self, widget):
         self.preferences_window = PreferencesWindow(self.repositories, self.return_from_preferences_callback)
+        self.refresh_timer.stop()
 
     def return_from_preferences_callback(self, new_repositories):
         # set new repositories and reset connected components
         BuildStatus.active.set_indicator_icon(self.indicator)
         self.repositories = new_repositories
         self.indicator.set_menu(self.build_menu())
+        self.refresh_timer.resume()
 
     def build_menu(self):
         menu = Gtk.Menu()
@@ -53,11 +55,10 @@ class Indicator:
         menu.append(item)
 
     def setup_refresh_timer(self):
-        self.refresh_timer = TimerWithTrigger(lambda: self.check_all_build_statuses())
+        self.refresh_timer = TimerWithResume(lambda: self.check_all_build_statuses())
         self.refresh_timer.start()
 
     def check_all_build_statuses(self):
-        print "all statuses"
         self.repositories.set_indicator_icon(self.indicator)
 
     def quit(self, widget):

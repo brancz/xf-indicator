@@ -24,26 +24,30 @@ class Repository(object):
 
     def build_status(self):
         print "status: " + self.slug
-        response = requests.get(Repository.travis_base_api_url + self.slug)
-        if response.status_code == requests.codes.not_found:
-            status = BuildStatus.not_existing
+        try:
+            response = requests.get(Repository.travis_base_api_url + self.slug)
+            if response.status_code == requests.codes.not_found:
+                status = BuildStatus.not_existing
+                status.set_menu_item_icon(self.menu_item)
+                return status
+            json_response = json.loads(response.content)
+            if not json_response:
+                status = BuildStatus.not_existing
+                status.set_menu_item_icon(self.menu_item)
+                return status
+            if json_response["last_build_result"] == 0:
+                status = BuildStatus.passing
+                status.set_menu_item_icon(self.menu_item)
+                return status
+            if json_response["last_build_result"] == None:
+                status = BuildStatus.unknown
+                status.set_menu_item_icon(self.menu_item)
+                return status
+            status = BuildStatus.failed
             status.set_menu_item_icon(self.menu_item)
-            return status
-        json_response = json.loads(response.content)
-        if not json_response:
-            status = BuildStatus.not_existing
-            status.set_menu_item_icon(self.menu_item)
-            return status
-        if json_response["last_build_result"] == 0:
-            status = BuildStatus.passing
-            status.set_menu_item_icon(self.menu_item)
-            return status
-        if json_response["last_build_result"] == None:
-            status = BuildStatus.unknown
-            status.set_menu_item_icon(self.menu_item)
-            return status
-        status = BuildStatus.failed
-        status.set_menu_item_icon(self.menu_item)
+        except ConnectionError:
+            print "A connection error occured. Let's try again next cycle."
+            status = BuildStatus.active
         return status
 
     def open_in_webbrowser(self, widget):
