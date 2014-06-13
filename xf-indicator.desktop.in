@@ -1,0 +1,8 @@
+[Desktop Entry]
+_Name=Xf Indicator
+_Comment=XfIndicator application
+Categories=GNOME;Utility;
+Exec=xf-indicator
+Icon=xf-indicator
+Terminal=false
+Type=Application

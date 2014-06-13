@@ -1,0 +1,8 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: xf-indicator
+Upstream-Contact: Frederic Branczyk <fbranczyk@gmail.com>
+Source: UNKNOWN
+
+Files: *
+Copyright: (C) 2014 Frederic Branczyk fbranczyk@gmail.com
+License: MIT
