@@ -22,14 +22,28 @@
 
 from __future__ import generators
 from gi.repository import GObject, Gtk
-from build_status import BuildStatus
 
-class RepositoryMenuItem(object):
-    def factory(slug, activate_callback):
-        menu_item = Gtk.ImageMenuItem(slug)
-        menu_item.set_always_show_image(True)
-        menu_item.connect("activate", activate_callback)
-        menu_item.show()
-        BuildStatus.active.set_menu_item_icon(menu_item)
-        return menu_item
+class ProjectListBoxRow(object):
+    def factory(title, remove_callback):
+        row = Gtk.ListBoxRow()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
+        row.add(hbox)
+        label = Gtk.Label(title, xalign=0)
+        remove_button = Gtk.Button("Remove")
+        def remove_clicked(widget):
+            list_box = widget.get_parent().get_parent().get_parent()
+            list_box_row = widget.get_parent().get_parent()
+            list_box.remove(list_box_row)
+            remove_callback()
+        remove_button.connect("clicked", remove_clicked)
+        hbox.pack_start(label, True, True, 0)
+        hbox.pack_start(remove_button, False, True, 0)
+
+        #show all of them
+        hbox.show()
+        row.show()
+        label.show()
+        remove_button.show()
+
+        return row
     factory = staticmethod(factory)

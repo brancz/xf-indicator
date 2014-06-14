@@ -24,8 +24,7 @@ import requests
 import sys
 import threading
 
-from repository import Repository
-from repository_list import RepositoryList
+from project_list import ProjectList
 from preferences_window import PreferencesWindow
 from build_status import BuildStatus
 from timer_with_resume import TimerWithResume
@@ -40,8 +39,8 @@ class Indicator:
 
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
 
-        self.repositories = RepositoryList()
-        self.repositories.load()
+        self.projects = ProjectList()
+        self.projects.load()
 
         BuildStatus.active.set_indicator_icon(self.indicator)
         self.indicator.set_menu(self.build_menu())
@@ -49,20 +48,20 @@ class Indicator:
         self.setup_refresh_timer()
 
     def on_preferences_activate(self, widget):
-        self.preferences_window = PreferencesWindow(self.repositories, self.return_from_preferences_callback)
+        self.preferences_window = PreferencesWindow(self.projects, self.return_from_preferences_callback)
         self.refresh_timer.stop()
 
-    def return_from_preferences_callback(self, new_repositories):
-        # set new repositories and reset connected components
+    def return_from_preferences_callback(self, new_projects):
+        # set new project list and reset connected components
         BuildStatus.active.set_indicator_icon(self.indicator)
-        self.repositories = new_repositories
+        self.projects = new_projects
         self.indicator.set_menu(self.build_menu())
         self.refresh_timer.resume()
 
     def build_menu(self):
         menu = Gtk.Menu()
 
-        self.repositories.create_menu_items(menu)
+        self.projects.create_menu_items(menu)
         self.add_menu_item(menu, "Preferences", self.on_preferences_activate)
         self.add_menu_item(menu, "Quit", self.quit)
 
@@ -79,8 +78,8 @@ class Indicator:
         self.refresh_timer.start()
 
     def check_all_build_statuses(self):
-        self.repositories.set_indicator_icon(self.indicator)
+        self.projects.set_indicator_icon(self.indicator)
 
     def quit(self, widget):
-        self.repositories.save()
+        self.projects.save()
         Gtk.main_quit()

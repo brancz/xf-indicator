@@ -22,21 +22,38 @@
 
 import json, requests
 import webbrowser
+from jenkinsapi.jenkins import Jenkins
+from jenkinsapi.utils.requester import Requester
 from build_status import BuildStatus
-from repository_list_box_row import RepositoryListBoxRow
-from repository_menu_item import RepositoryMenuItem
+from project_list_box_row import ProjectListBoxRow
+from project_menu_item import ProjectMenuItem
 
-class Repository(object):
-    travis_base_api_url = "https://api.travis-ci.org/repos/"
-    travis_base_url = "https://travis-ci.org/"
+class Project(object):
     
-    def __init__(self, slug):
-        self.slug = slug
+    def __init__(self, name):
+        self.name = name
+
+    def add_menu_item(self, menu):
+        self.menu_item = ProjectMenuItem.factory(self.name, self.open_in_webbrowser)
+        menu.append(self.menu_item)
+
+    def add_to_listbox(self, listbox, remove_callback):
+        listbox.add(ProjectListBoxRow.factory(self.name, remove_callback))
 
     def build_status(self):
-        print "status: " + self.slug
+        raise NotImplementedError()
+
+    def open_in_webbrowser(self, widget):
+        raise NotImplementedError()
+
+class TravisProject(Project):
+    travis_base_api_url = "https://api.travis-ci.org/repos/"
+    travis_base_url = "https://travis-ci.org/"
+
+    def build_status(self):
+        print "status: " + self.name
         try:
-            response = requests.get(Repository.travis_base_api_url + self.slug)
+            response = requests.get(TravisProject.travis_base_api_url + self.name)
             if response.status_code == requests.codes.not_found:
                 status = BuildStatus.not_existing
                 status.set_menu_item_icon(self.menu_item)
@@ -62,11 +79,22 @@ class Repository(object):
         return status
 
     def open_in_webbrowser(self, widget):
-        webbrowser.open(Repository.travis_base_url + self.slug)
+        webbrowser.open(TravisProject.travis_base_url + self.name)
 
-    def add_menu_item(self, menu):
-        self.menu_item = RepositoryMenuItem.factory(self.slug, self.open_in_webbrowser)
-        menu.append(self.menu_item)
+class SSLRequester(Requester):
+    def __init__(self, username, password, verify):
+        super(SSLRequester, self).__init__(username, password)
+        self.verify = verify
 
-    def add_to_listbox(self, listbox, remove_callback):
-        listbox.add(RepositoryListBoxRow.factory(self, self.slug, remove_callback))
+    def get_request_dict(self, params, headers):
+        requestKWargs = super(SSLRequester, self).get_request_dict(params, headers)
+        requestKWargs['verify'] = self.verify
+        return requestKWargs
+
+class JenkinsRetrieve(object):
+    def __init__(self, url, username=None, password=None, verify=True):
+        ssl_requester = SSLRequester(username, password, verify)
+        self.jenkins = Jenkins(url, requester=ssl_requester)
+
+    def status_of(self, name):
+        return self.jenkins[name].get_last_build().get_status()

@@ -26,14 +26,14 @@ import os
 
 CONFIG_FILE=os.path.expanduser("~/.xf-indicator.yaml")
 
-class RepositoryList(object):
+class ProjectList(object):
     def load(self):
         try:
             f = open(CONFIG_FILE, 'r')
         except IOError:
             print "Config file not found."
         else:
-            self.repositories = yaml.load(f)
+            self.projects = yaml.load(f)
             f.close()
 
     def save(self):
@@ -43,18 +43,18 @@ class RepositoryList(object):
         except IOError:
             print "Could not save config."
         else:
-            yaml.dump(self.repositories, f)
+            yaml.dump(self.projects, f)
             f.close()
 
     def __init__(self):
-        self.repositories = []
+        self.projects = []
 
-    def add_repository(self, repository):
-        self.repositories.append(repository)
+    def add_project(self, project):
+        self.projects.append(project)
 
     def status(self):
-        build_status = lambda repo: repo.build_status()
-        statuses = map(build_status, self.repositories)
+        build_status = lambda project: project.build_status()
+        statuses = map(build_status, self.projects)
         for status in statuses:
             print status
         statuses = filter(lambda x: x != BuildStatus.passing, statuses)
@@ -74,18 +74,18 @@ class RepositoryList(object):
         self.status().set_indicator_icon(indicator)
 
     def create_menu_items(self, menu):
-        for repository in self.repositories:
-            repository.add_menu_item(menu)
+        for project in self.projects:
+            project.add_menu_item(menu)
     
     def add_all_to_listbox(self, listbox):
-        for repo in self.repositories:
-            repo.add_to_listbox(listbox, self.remove_from_listbox_callback)
+        for project in self.projects:
+            project.add_to_listbox(listbox, lambda: self.remove_from_listbox_callback(project))
 
-    def remove_from_listbox_callback(self, repo):
-        self.repositories.remove(repo)
+    def remove_from_listbox_callback(self, project):
+        self.projects.remove(project)
     
     def clone(self):
-        clone = RepositoryList()
-        for repo in self.repositories:
-            clone.add_repository(repo)
+        clone = ProjectList()
+        for project in self.projects:
+            clone.add_project(project)
         return clone

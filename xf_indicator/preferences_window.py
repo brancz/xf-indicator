@@ -21,11 +21,11 @@
 ### END LICENSE
 
 from gi.repository import Gtk
-from repository import Repository
+from project import TravisProject
 
 class PreferencesWindow(Gtk.Window):
 
-    def __init__(self, repositories, return_from_preferences_callback):
+    def __init__(self, projects, return_from_preferences_callback):
         self.return_from_preferences_callback = return_from_preferences_callback
 
         Gtk.Window.__init__(self, title="Preferences")
@@ -46,40 +46,40 @@ class PreferencesWindow(Gtk.Window):
         hbox.pack_start(self.listbox, True, True, 0)
         row.add(hbox)
 
-        #only work on a copy of repositories until closing the preferences,
+        #only work on a copy of the project list until closing the preferences,
         #thus sumbmitting the change
-        self.repositories = repositories.clone()
-        self.repositories.add_all_to_listbox(self.listbox)
+        self.projects = projects.clone()
+        self.projects.add_all_to_listbox(self.listbox)
 
         self.superlistbox.add(row)
 
         ###
-        self.add_add_repo_button()
+        self.add_add_project_button()
 
         self.connect("delete-event", self.quit)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
 
     def quit(self, window, event):
-        self.return_from_preferences_callback(self.repositories)
+        self.return_from_preferences_callback(self.projects)
 
-    def add_add_repo_button(self):
+    def add_add_project_button(self):
         row = Gtk.ListBoxRow()
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
         row.add(hbox)
         self.entry = Gtk.Entry(xalign=0)
-        self.entry.connect("activate", self.add_repo)
+        self.entry.connect("activate", self.add_project)
         add_button = Gtk.Button("Add")
-        add_button.connect("clicked", self.add_repo)
+        add_button.connect("clicked", self.add_project)
         hbox.pack_start(self.entry, True, True, 0)
         hbox.pack_start(add_button, False, True, 0)
 
         self.superlistbox.add(row)
 
-    def add_repo(self, widget):
-        repo_entry_text = self.entry.get_text()
-        if repo_entry_text != "":
-            repo = Repository(repo_entry_text)
-            repo.add_to_listbox(self.listbox, self.repositories.remove_from_listbox_callback)
-            self.repositories.add_repository(repo)
+    def add_project(self, widget):
+        project_entry_text = self.entry.get_text()
+        if project_entry_text != "":
+            project = TravisProject(project_entry_text)
+            project.add_to_listbox(self.listbox, self.projects.remove_from_listbox_callback)
+            self.projects.add_project(project)
             self.entry.set_text("")
