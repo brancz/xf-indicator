@@ -16,7 +16,6 @@ Depends: ${misc:Depends},
  gir1.2-gtk-3.0,
  python-yaml,
  python-requests,
- gir1.2-appindicator3-0.1,
- yelp
+ gir1.2-appindicator3-0.1
 Description: Monitor your CI builds with a simple indicator
  UNKNOWN
