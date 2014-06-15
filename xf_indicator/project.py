@@ -24,6 +24,8 @@ import json, requests
 import webbrowser
 from jenkinsapi.jenkins import Jenkins
 from jenkinsapi.utils.requester import Requester
+from jenkinsapi.custom_exceptions import NoBuildData
+from jenkinsapi.custom_exceptions import UnknownJob
 from build_status import BuildStatus
 from project_list_box_row import ProjectListBoxRow
 from project_menu_item import ProjectMenuItem
@@ -97,4 +99,15 @@ class JenkinsRetrieve(object):
         self.jenkins = Jenkins(url, requester=ssl_requester)
 
     def status_of(self, name):
-        return self.jenkins[name].get_last_build().get_status()
+        raw_status_to_build_status = {"SUCCESS": BuildStatus.passing, "FAILURE": BuildStatus.failed, "UNKOWN": BuildStatus.unknown, "NOT_EXISTING": BuildStatus.not_existing}
+        raw_status = self.raw_status_of(name)
+        result = raw_status_to_build_status[raw_status]
+        return result
+
+    def raw_status_of(self, name):
+        try:
+            return self.jenkins[name].get_last_build().get_status()
+        except NoBuildData:
+            return 'UNKOWN'
+        except UnknownJob:
+            return 'NOT_EXISTING'
