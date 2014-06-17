@@ -88,6 +88,7 @@ class PreferencesWindow(Gtk.Window):
         row.add(hbox)
         self.entry = Gtk.Entry(xalign=0)
         self.entry.connect("activate", self.add_project)
+        self.entry.set_placeholder_text("e.g. twbs/bootstrap")
         add_button = Gtk.Button("Add")
         add_button.connect("clicked", self.add_project)
         hbox.pack_start(self.entry, True, True, 0)
