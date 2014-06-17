@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=xf-indicator
+Icon=xf-indicator
+Name=XF Indicator
+Comment=Monitor your CI builds.
+X-GNOME-Autostart-enabled=true

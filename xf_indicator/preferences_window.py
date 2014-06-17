@@ -20,8 +20,16 @@
 # THE SOFTWARE.
 ### END LICENSE
 
-from gi.repository import Gtk
+import os
+from gi.repository import Gtk, GLib, Gio
 from project import TravisProject
+from xf_indicator_lib.helpers import get_media_file
+
+autostart_dir = os.path.join(GLib.get_user_config_dir(),"autostart/")
+autostart_template = "xf-indicator-autostart.desktop"
+autostart_file = get_media_file(autostart_template)
+autostart_file = autostart_file.replace("file:///", '')
+installed_file = os.path.join(autostart_dir, autostart_template)
 
 class PreferencesWindow(Gtk.Window):
 
@@ -46,6 +54,9 @@ class PreferencesWindow(Gtk.Window):
         hbox.pack_start(self.listbox, True, True, 0)
         row.add(hbox)
 
+        ###
+        self.add_autostart_switch()
+
         #only work on a copy of the project list until closing the preferences,
         #thus sumbmitting the change
         self.projects = projects.clone()
@@ -63,6 +74,14 @@ class PreferencesWindow(Gtk.Window):
     def quit(self, window, event):
         self.return_from_preferences_callback(self.projects)
 
+    def add_project(self, widget):
+        project_entry_text = self.entry.get_text()
+        if project_entry_text != "":
+            project = TravisProject(project_entry_text)
+            project.add_to_listbox(self.listbox, self.projects.remove_from_listbox_callback)
+            self.projects.add_project(project)
+            self.entry.set_text("")
+
     def add_add_project_button(self):
         row = Gtk.ListBoxRow()
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
@@ -76,10 +95,29 @@ class PreferencesWindow(Gtk.Window):
 
         self.superlistbox.add(row)
 
-    def add_project(self, widget):
-        project_entry_text = self.entry.get_text()
-        if project_entry_text != "":
-            project = TravisProject(project_entry_text)
-            project.add_to_listbox(self.listbox, self.projects.remove_from_listbox_callback)
-            self.projects.add_project(project)
-            self.entry.set_text("")
+    def add_autostart_switch(self):
+        row = Gtk.ListBoxRow()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
+        row.add(hbox)
+        autostart_label = Gtk.Label("Autostart?", xalign=0)
+        self.autostart_switch = Gtk.Switch()
+        if os.path.isfile(installed_file):
+            self.autostart_switch.set_active(True)
+        self.autostart_switch.connect('notify::active', self.on_autostart_switch_activate)
+        hbox.pack_start(autostart_label, True, True, 0)
+        hbox.pack_start(self.autostart_switch, False, True, 0)
+
+        self.superlistbox.add(row)
+        separator = Gtk.HSeparator()
+        separator.set_margin_bottom(5)
+        separator.set_margin_top(5)
+        self.superlistbox.add(separator)
+
+    def on_autostart_switch_activate(self, widget, data=None):
+        if self.autostart_switch.get_active():
+            if not os.path.exists(autostart_dir):
+                os.mkdir(autostart_dir)
+            if os.path.isdir(autostart_dir):
+                os.symlink(autostart_file, installed_file)
+        else:
+            os.unlink(installed_file)
