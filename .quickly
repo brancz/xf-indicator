@@ -1,3 +1,4 @@
 project = xf-indicator
 version = 12.08.1
 template = ubuntu-application
+dependencies = python-enum34

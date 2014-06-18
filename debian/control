@@ -17,6 +17,7 @@ Depends: ${misc:Depends},
  python-requests,
  gir1.2-glib-2.0,
  python-jenkinsapi,
- gir1.2-appindicator3-0.1
+ gir1.2-appindicator3-0.1,
+ python-enum34
 Description: Monitor your CI builds with a simple indicator
  UNKNOWN
