@@ -66,9 +66,9 @@ class ProjectList(object):
         statuses = filter(lambda x: x != BuildStatus.not_existing, statuses)
         if not statuses:
             return BuildStatus.not_existing
-        statuses = filter(lambda x: x != BuildStatus.failed, statuses)
+        statuses = filter(lambda x: x != BuildStatus.failing, statuses)
         if not statuses:
-            return BuildStatus.failed
+            return BuildStatus.failing
 
     def set_indicator_icon(self, indicator):
         self.status().set_indicator_icon(indicator)

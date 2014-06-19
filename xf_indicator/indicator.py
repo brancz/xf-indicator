@@ -28,6 +28,7 @@ from project_list import ProjectList
 from preferences_window import PreferencesWindow
 from build_status import BuildStatus
 from timer_with_resume import TimerWithResume
+from XfIndicatorHelpDialog import XfIndicatorHelpDialog
 from gi.repository import AppIndicator3
 from gi.repository import Gtk
 
@@ -51,6 +52,10 @@ class Indicator:
         self.preferences_window = PreferencesWindow(self.projects, self.return_from_preferences_callback)
         self.refresh_timer.stop()
 
+    def on_help_activate(self, widget):
+        self.help_dialog = XfIndicatorHelpDialog()
+        self.help_dialog.show()
+
     def return_from_preferences_callback(self, new_projects):
         # set new project list and reset connected components
         BuildStatus.active.set_indicator_icon(self.indicator)
@@ -63,6 +68,7 @@ class Indicator:
 
         self.projects.create_menu_items(menu)
         self.add_menu_item(menu, "Preferences", self.on_preferences_activate)
+        self.add_menu_item(menu, "Help", self.on_help_activate)
         self.add_menu_item(menu, "Quit", self.quit)
 
         return menu

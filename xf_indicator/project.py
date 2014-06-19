@@ -73,7 +73,7 @@ class TravisProject(Project):
                 status = BuildStatus.unknown
                 status.set_menu_item_icon(self.menu_item)
                 return status
-            status = BuildStatus.failed
+            status = BuildStatus.failing
             status.set_menu_item_icon(self.menu_item)
         except ConnectionError:
             print "A connection error occured. Let's try again next cycle."
@@ -99,7 +99,7 @@ class JenkinsRetrieve(object):
         self.jenkins = Jenkins(url, requester=ssl_requester)
 
     def status_of(self, name):
-        raw_status_to_build_status = {"SUCCESS": BuildStatus.passing, "FAILURE": BuildStatus.failed, "UNKOWN": BuildStatus.unknown, "NOT_EXISTING": BuildStatus.not_existing}
+        raw_status_to_build_status = {"SUCCESS": BuildStatus.passing, "FAILURE": BuildStatus.failing, "UNKOWN": BuildStatus.unknown, "NOT_EXISTING": BuildStatus.not_existing}
         raw_status = self.raw_status_of(name)
         result = raw_status_to_build_status[raw_status]
         return result
