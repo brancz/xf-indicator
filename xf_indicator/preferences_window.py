@@ -22,7 +22,8 @@
 
 import os
 from gi.repository import Gtk, GLib, Gio
-from project import TravisProject
+from project import Project
+from build_server import TravisCIOrg
 from xf_indicator_lib.helpers import get_media_file
 
 autostart_dir = os.path.join(GLib.get_user_config_dir(),"autostart/")
@@ -77,7 +78,7 @@ class PreferencesWindow(Gtk.Window):
     def add_project(self, widget):
         project_entry_text = self.entry.get_text()
         if project_entry_text != "":
-            project = TravisProject(project_entry_text)
+            project = Project(project_entry_text, TravisCIOrg())
             project.add_to_listbox(self.listbox, self.projects.remove_from_listbox_callback)
             self.projects.add_project(project)
             self.entry.set_text("")

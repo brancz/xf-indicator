@@ -24,15 +24,33 @@ from gi.repository import Gtk, GObject
 from enum import Enum
 
 class BuildStatus(Enum):
-    passing      = ("ubuntuone-client-idle",     "The latest build has passed.")
-    failing      = ("ubuntuone-client-error",    "The latest build has failed.")
-    not_existing = ("ubuntuone-client-offline",  "No latest build status has been found.")
-    unknown      = ("ubuntuone-client-paused",   "The latest build status is unknown.")
-    active       = ("ubuntuone-client-updating", "Updating the build status...")
+    active       = (1, "ubuntuone-client-updating", "Updating the build status...")
+    failing      = (2, "ubuntuone-client-error",    "The latest build has failed.")
+    not_existing = (3, "ubuntuone-client-offline",  "No latest build status has been found.")
+    unknown      = (4, "ubuntuone-client-paused",   "The latest build status is unknown.")
+    passing      = (5, "ubuntuone-client-idle",     "The latest build has passed.")
 
-    def __init__(self, icon_name, description):
+    def __init__(self, number, icon_name, description):
         self.icon_name = icon_name
         self.description = description
+        self._value_ = number
+
+    def __ge__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value >= other.value
+        return NotImplemented
+    def __gt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value > other.value
+        return NotImplemented
+    def __le__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value <= other.value
+        return NotImplemented
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+        return NotImplemented
 
     def set_indicator_icon(self, indicator):
         GObject.idle_add(lambda: indicator.set_icon(self.icon_name))
@@ -46,3 +64,6 @@ class BuildStatus(Enum):
 
     def set_text(self, gtk_object):
         GObject.idle_add(lambda: gtk_object.set_text(self.description))
+
+    def __str__(self):
+        return self.name
