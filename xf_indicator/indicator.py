@@ -53,8 +53,8 @@ class Indicator:
         self.refresh_timer.stop()
 
     def on_help_activate(self, widget):
-        self.help_dialog = XfIndicatorHelpDialog()
-        self.help_dialog.show()
+        help_dialog = XfIndicatorHelpDialog.instance()
+        help_dialog.present()
 
     def return_from_preferences_callback(self, new_projects):
         # set new project list and reset connected components

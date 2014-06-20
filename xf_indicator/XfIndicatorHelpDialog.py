@@ -31,10 +31,20 @@ from build_status import BuildStatus
 # See xf_indicator_lib.HelpDialog.py for more details about how this class works.
 class XfIndicatorHelpDialog(HelpDialog):
     __gtype_name__ = "HelpXfIndicatorDialog"
+    _instance = None
+
+    @classmethod
+    def instance(self):
+        if XfIndicatorHelpDialog._instance is None:
+            XfIndicatorHelpDialog._instance = XfIndicatorHelpDialog()
+        return XfIndicatorHelpDialog._instance
     
     def finish_initializing(self, builder): # pylint: disable=E1002
         """Set up the help dialog"""
         super(XfIndicatorHelpDialog, self).finish_initializing(builder)
+
+        # only hide window, don't destroy on close button
+        self.connect('delete-event', lambda w, e: w.hide() or True)
 
         image = builder.get_object("passing-build-status-image")
         label = builder.get_object("passing-build-status-description")
