@@ -12,6 +12,7 @@ Package: xf-indicator
 Architecture: all
 Depends: ${misc:Depends},
  ${python:Depends},
+ python-enum34,
  python-yaml,
  gir1.2-gtk-3.0,
  python-requests,
