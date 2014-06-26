@@ -25,10 +25,12 @@ import sys
 import threading
 
 from project_list import ProjectList
+from build_server_list import BuildServerList
 from preferences_window import PreferencesWindow
 from build_status import BuildStatus
 from timer_with_resume import TimerWithResume
 from XfIndicatorHelpDialog import XfIndicatorHelpDialog
+from PreferencesXfIndicatorWindow import PreferencesXfIndicatorWindow
 from gi.repository import AppIndicator3
 from gi.repository import Gtk
 
@@ -49,7 +51,12 @@ class Indicator:
         self.setup_refresh_timer()
 
     def on_preferences_activate(self, widget):
-        self.preferences_window = PreferencesWindow(self.projects, self.return_from_preferences_callback)
+        #self.preferences_window = PreferencesWindow(self.projects, self.return_from_preferences_callback)
+        self.preferences_window = PreferencesXfIndicatorWindow.instance()
+        self.preferences_window.set_projects(self.projects)
+        self.preferences_window.set_build_servers(BuildServerList())
+        self.preferences_window.set_callback(self.return_from_preferences_callback)
+        self.preferences_window.present()
         self.refresh_timer.stop()
 
     def on_help_activate(self, widget):

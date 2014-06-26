@@ -76,6 +76,10 @@ class ProjectList(object):
 
     def remove_from_listbox_callback(self, project):
         self.projects.remove(project)
+
+    def iterate(self, func):
+        for project in self.projects:
+            func(project)
     
     def clone(self):
         clone = ProjectList()

@@ -20,30 +20,26 @@
 # THE SOFTWARE.
 ### END LICENSE
 
-import webbrowser
-from project_list_box_row import ProjectListBoxRow
-from project_menu_item import ProjectMenuItem
+from build_server import TravisCIOrg, TravisCICom
+import yaml
+import os
 
-class Project(object):
-    def __init__(self, name, build_server):
-        self.name = name
-        self.build_server = build_server
+CONFIG_FILE=os.path.expanduser("~/.xf-indicator.yaml")
 
-    def add_menu_item(self, menu):
-        self.menu_item = ProjectMenuItem.factory(self.name, self.open_in_webbrowser)
-        menu.append(self.menu_item)
+class BuildServerList(object):
+    def __init__(self):
+        self.build_servers = []
+        self.build_servers.append(TravisCIOrg())
 
-    def add_to_listbox(self, listbox, remove_callback):
-        listbox.add(ProjectListBoxRow.factory(self.name, remove_callback))
+    def add_build_server(self, build_server):
+        self.build_servers.append(build_server)
 
-    def build_status(self):
-        status = self.build_server.latest_status_of(self.name)
-        print "status of " + self.name + ": " + str(status)
-        status.set_menu_item_icon(self.menu_item)
-        return status
-
-    def open_in_webbrowser(self, widget):
-        webbrowser.open(self.build_server.latest_build_url_of(self.name))
-
-    def __str__(self):
-        return self.name
+    def iterate(self, func):
+        for build_server in self.build_servers:
+            func(build_server)
+    
+    def clone(self):
+        clone = BuildServerList()
+        for build_server in self.build_servers:
+            clone.add_build_server(build_server)
+        return clone
