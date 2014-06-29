@@ -1,6 +1,23 @@
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 ### BEGIN LICENSE
-# This file is in the public domain
+# Copyright (C) 2014 Frederic Branczyk fbranczyk@gmail.com
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 ### END LICENSE
 
 # This is your preferences window.
@@ -60,25 +77,39 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         print "remove pressed"
 
     def set_projects(self, projects):
+        self.projects = projects
+
+        #cleanup
+        old_column = self.buildTreeview.get_column(0)
+        if old_column is not None:
+            self.buildTreeview.remove_column(old_column)
+
+        #build column
         build_store = Gtk.ListStore(str)
         self.buildTreeview.set_model(model=build_store)
-        renderer_1 = Gtk.CellRendererText()        
-        column_1 = Gtk.TreeViewColumn('Name', renderer_1, text=0)
-        column_1.set_sort_column_id(0)        
-        self.buildTreeview.append_column(column_1)
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn('Name', renderer, text=0)
+        column.set_sort_column_id(0)
+        self.buildTreeview.append_column(column)
 
-        self.projects = projects
         projects.iterate(lambda project: build_store.append([str(project)]))
 
     def set_build_servers(self, build_servers):
+        self.build_servers = build_servers
+
+        #cleanup
+        old_column = self.buildServerTreeview.get_column(0)
+        if old_column is not None:
+            self.buildServerTreeview.remove_column(old_column)
+
+        #build column
         build_server_store = Gtk.ListStore(str)
         self.buildServerTreeview.set_model(model=build_server_store)
-        renderer_2 = Gtk.CellRendererText()        
-        column_2 = Gtk.TreeViewColumn('Name', renderer_2, text=0)
-        column_2.set_sort_column_id(0)        
-        self.buildServerTreeview.append_column(column_2)
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn('Name', renderer, text=0)
+        column.set_sort_column_id(0)
+        self.buildServerTreeview.append_column(column)
 
-        self.build_servers = build_servers
         build_servers.iterate(lambda build_server: build_server_store.append([str(build_server)]))
 
     def set_callback(self, callback):

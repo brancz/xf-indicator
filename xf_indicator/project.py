@@ -29,6 +29,15 @@ class Project(object):
         self.name = name
         self.build_server = build_server
 
+    def __eq__(self, other):
+        return self.name == other.name and self.build_server == other.build_server
+
+    def __hash__(self):
+        return hash(self.name + hash(self.build_server))
+
+    def __str__(self):
+        return self.name
+
     def add_menu_item(self, menu):
         self.menu_item = ProjectMenuItem.factory(self.name, self.open_in_webbrowser)
         menu.append(self.menu_item)
@@ -44,6 +53,3 @@ class Project(object):
 
     def open_in_webbrowser(self, widget):
         webbrowser.open(self.build_server.latest_build_url_of(self.name))
-
-    def __str__(self):
-        return self.name
