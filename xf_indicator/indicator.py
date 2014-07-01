@@ -44,6 +44,7 @@ class Indicator:
 
         self.projects = ProjectList()
         self.projects.load()
+        self.build_servers = BuildServerList()
 
         BuildStatus.active.set_indicator_icon(self.indicator)
         self.indicator.set_menu(self.build_menu())
@@ -53,7 +54,7 @@ class Indicator:
     def on_preferences_activate(self, widget):
         preferences_window = PreferencesXfIndicatorWindow.instance()
         preferences_window.set_projects(self.projects)
-        preferences_window.set_build_servers(BuildServerList())
+        preferences_window.set_build_servers(self.build_servers)
         preferences_window.set_callback(self.return_from_preferences_callback)
         preferences_window.present()
         self.refresh_timer.stop()
@@ -62,8 +63,10 @@ class Indicator:
         help_dialog = XfIndicatorHelpDialog.instance()
         help_dialog.present()
 
-    def return_from_preferences_callback(self, new_projects):
+    def return_from_preferences_callback(self, new_projects, new_build_servers):
         # set new project list and reset connected components
+        self.new_projects = new_projects
+        self.build_servers = new_build_servers
         self.indicator.set_menu(self.build_menu())
         self.refresh_timer.resume()
 

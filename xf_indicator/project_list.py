@@ -34,6 +34,8 @@ class ProjectList(object):
             print "Config file not found."
         else:
             self.projects = yaml.load(f)
+            if self.projects is None:
+                self.projects = ProjectList()
             f.close()
 
     def save(self):
@@ -72,17 +74,8 @@ class ProjectList(object):
     
     def add_all_to_listbox(self, listbox):
         for project in self.projects:
-            project.add_to_listbox(listbox, lambda: self.remove_from_listbox_callback(project))
-
-    def remove_from_listbox_callback(self, project):
-        self.projects.remove(project)
+            project.add_to_listbox(listbox, lambda: self.projects.remove(project))
 
     def iterate(self, func):
         for project in self.projects:
             func(project)
-    
-    def clone(self):
-        clone = ProjectList()
-        for project in self.projects:
-            clone.add_project(project)
-        return clone

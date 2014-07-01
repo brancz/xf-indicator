@@ -34,6 +34,7 @@ import logging
 logger = logging.getLogger('xf_indicator')
 
 from xf_indicator_lib.PreferencesWindow import PreferencesWindow
+from NewBuildXfIndicatorWindow import NewBuildXfIndicatorWindow
 from gi.repository import Gtk
 
 class PreferencesXfIndicatorWindow(PreferencesWindow):
@@ -66,12 +67,14 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         self.show_all()
 
     def quit(self, window, event):
-        self.return_from_preferences_callback(self.projects)
+        self.return_from_preferences_callback(self.projects, self.build_servers)
         window.hide()
         return True
 
     def on_add_project(self, widget):
-        print "add pressed"
+        new_build_window = NewBuildXfIndicatorWindow()
+        new_build_window.set_build_servers(self.build_servers)
+        new_build_window.present()
 
     def on_remove_project(self, widget):
         print "remove pressed"
