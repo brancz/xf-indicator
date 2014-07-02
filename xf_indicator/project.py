@@ -30,7 +30,7 @@ class Project(object):
         self.build_server = build_server
 
     def __eq__(self, other):
-        return self.name == other.name and self.build_server == other.build_server
+        return type(other) == Project and self.name == other.name and self.build_server == other.build_server
 
     def __hash__(self):
         return hash(self.name + hash(self.build_server))

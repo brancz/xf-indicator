@@ -31,6 +31,9 @@ class BuildServerList(object):
         self.build_servers = []
         self.build_servers.append(TravisCIOrg())
 
+    def get(self, index):
+        return self.build_servers[index]
+
     def add_build_server(self, build_server):
         self.build_servers.append(build_server)
 

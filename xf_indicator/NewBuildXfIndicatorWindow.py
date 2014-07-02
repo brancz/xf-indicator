@@ -34,6 +34,7 @@ import logging
 logger = logging.getLogger('xf_indicator')
 
 from xf_indicator_lib.NewBuildWindow import NewBuildWindow
+from project import Project
 from gi.repository import Gtk
 
 class NewBuildXfIndicatorWindow(NewBuildWindow):
@@ -52,7 +53,10 @@ class NewBuildXfIndicatorWindow(NewBuildWindow):
 
         # Code for other initialization actions should be added here.
 
-        self.buildServerCombobox = builder.get_object("buildServerCombobox")
+        self.build_server_combobox = builder.get_object("buildServerCombobox")
+        self.build_name_entry = builder.get_object("buildNameEntry")
+        self.add_build_button = builder.get_object("addBuildButton")
+        self.add_build_button.connect("clicked", self.on_add_build_button_activate)
 
         self.connect("delete-event", self.quit)
         self.set_position(Gtk.WindowPosition.CENTER)
@@ -63,13 +67,28 @@ class NewBuildXfIndicatorWindow(NewBuildWindow):
         window.hide()
         return True
 
+    def on_add_build_button_activate(self, widget):
+        project_name = self.build_name_entry.get_text()
+        if not project_name:
+            # please provide a build-name
+            return
+        project_build_server_index = self.build_server_combobox.get_active()
+        if project_build_server_index is -1:
+            # please select a build-server
+            return
+        project_build_server = self.build_servers.get(project_build_server_index)
+        project = Project(project_name, project_build_server)
+        self.add_callback(project)
+        self.hide()
+
+    def set_add_callback(self, callback):
+        self.add_callback = callback
+
     def set_build_servers(self, build_servers):
+        self.build_servers = build_servers
         build_server_store = Gtk.ListStore(str)
-        #all_builds = []
-        #build_servers.iterate(lambda build_server: all_builds.append(str(build_server)))
-        #print all_builds
         build_servers.iterate(lambda build_server: build_server_store.append([str(build_server)]))
-        self.buildServerCombobox.set_model(model=build_server_store)
+        self.build_server_combobox.set_model(model=build_server_store)
         renderer_text = Gtk.CellRendererText()
-        self.buildServerCombobox.pack_start(renderer_text, True)
-        self.buildServerCombobox.add_attribute(renderer_text, "text", 0)
+        self.build_server_combobox.pack_start(renderer_text, True)
+        self.build_server_combobox.add_attribute(renderer_text, "text", 0)

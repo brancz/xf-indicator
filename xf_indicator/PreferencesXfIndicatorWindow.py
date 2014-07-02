@@ -74,10 +74,18 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
     def on_add_project(self, widget):
         new_build_window = NewBuildXfIndicatorWindow()
         new_build_window.set_build_servers(self.build_servers)
+        new_build_window.set_add_callback(self.new_build_callback)
         new_build_window.present()
 
+    def new_build_callback(self, project):
+        self.projects.add_project(project)
+
     def on_remove_project(self, widget):
-        print "remove pressed"
+        (model, pathlist) = self.buildTreeview.get_selection().get_selected_rows()
+        for path in pathlist:
+            tree_iter = model.get_iter(path)
+            value = model.get_value(tree_iter, 0)
+            print value
 
     def set_projects(self, projects):
         self.projects = projects
