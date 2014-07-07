@@ -20,16 +20,25 @@
 # THE SOFTWARE.
 ### END LICENSE
 
-from __future__ import generators
 from gi.repository import GObject, Gtk
 from build_status import BuildStatus
+import webbrowser
 
-class ProjectMenuItem(object):
-    def factory(title, activate_callback):
-        menu_item = Gtk.ImageMenuItem(title)
-        menu_item.set_always_show_image(True)
-        menu_item.connect("activate", activate_callback)
-        menu_item.show()
-        BuildStatus.active.set_menu_item_icon(menu_item)
-        return menu_item
-    factory = staticmethod(factory)
+class ProjectMenuItem(Gtk.ImageMenuItem):
+    def __init__(self, project):
+        super(Gtk.ImageMenuItem, self).__init__(str(project))
+        self.project = project
+        self.project.register_on_status_changed(self)
+        self.connect("activate", self.on_project_activate)
+        self.set_always_show_image(True)
+        self.show()
+        BuildStatus.active.set_menu_item_icon(self)
+
+    def on_status_changed(self, new_status):
+        new_status.set_menu_item_icon(self)
+
+    def on_project_activate(self, widget):
+        self.open_project_in_webbrowser()
+
+    def open_project_in_webbrowser(self):
+        webbrowser.open(self.project.latest_build_url())

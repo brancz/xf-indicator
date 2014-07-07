@@ -20,30 +20,25 @@
 # THE SOFTWARE.
 ### END LICENSE
 
-from __future__ import generators
-from gi.repository import GObject, Gtk
+from sets import Set
 
-class ProjectListBoxRow(object):
-    def factory(title, remove_callback):
-        row = Gtk.ListBoxRow()
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
-        row.add(hbox)
-        label = Gtk.Label(title, xalign=0)
-        remove_button = Gtk.Button("Remove")
-        def remove_clicked(widget):
-            list_box = widget.get_parent().get_parent().get_parent()
-            list_box_row = widget.get_parent().get_parent()
-            list_box.remove(list_box_row)
-            remove_callback()
-        remove_button.connect("clicked", remove_clicked)
-        hbox.pack_start(label, True, True, 0)
-        hbox.pack_start(remove_button, False, True, 0)
+class StatusSubject(object):
+    observers = None
 
-        #show all of them
-        hbox.show()
-        row.show()
-        label.show()
-        remove_button.show()
+    def build_status(self, name):
+        raise NotImplementedError()
 
-        return row
-    factory = staticmethod(factory)
+    def register_on_status_changed(self, observer):
+        self._observers().add(observer)
+
+    def deregister_on_status_changed(self, observer):
+        self._observers().remove(observer)
+
+    def notify(self, new_status):
+        for observer in self._observers():
+            observer.on_status_changed(new_status)
+
+    def _observers(self):
+        if self.observers is None:
+            self.observers = Set([])
+        return self.observers

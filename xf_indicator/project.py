@@ -20,11 +20,9 @@
 # THE SOFTWARE.
 ### END LICENSE
 
-import webbrowser
-from project_list_box_row import ProjectListBoxRow
-from project_menu_item import ProjectMenuItem
+from status_subject import StatusSubject
 
-class Project(object):
+class Project(StatusSubject):
     def __init__(self, name, build_server):
         self.name = name
         self.build_server = build_server
@@ -38,18 +36,21 @@ class Project(object):
     def __str__(self):
         return self.name
 
-    def add_menu_item(self, menu):
-        self.menu_item = ProjectMenuItem.factory(self.name, self.open_in_webbrowser)
-        menu.append(self.menu_item)
+    def type(self):
+        return self.build_server.type()
 
-    def add_to_listbox(self, listbox, remove_callback):
-        listbox.add(ProjectListBoxRow.factory(self.name, remove_callback))
+    def name(self):
+        return self.name
 
-    def build_status(self):
+    def set_status(self, new_status):
+        if not hasattr(self, 'status') or self.status is not new_status: 
+            self.status = new_status
+            self.notify(new_status)
+
+    def refresh_build_status(self):
         status = self.build_server.latest_status_of(self.name)
-        print "status of " + self.name + ": " + str(status)
-        status.set_menu_item_icon(self.menu_item)
+        self.set_status(status)
         return status
 
-    def open_in_webbrowser(self, widget):
-        webbrowser.open(self.build_server.latest_build_url_of(self.name))
+    def latest_build_url(self):
+        return self.build_server.latest_build_url_of(self.name)

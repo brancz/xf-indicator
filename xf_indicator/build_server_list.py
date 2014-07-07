@@ -24,8 +24,6 @@ from build_server import TravisCIOrg, TravisCICom
 import yaml
 import os
 
-CONFIG_FILE=os.path.expanduser("~/.xf-indicator.yaml")
-
 class BuildServerList(object):
     def __init__(self):
         self.build_servers = []
@@ -37,9 +35,8 @@ class BuildServerList(object):
     def add_build_server(self, build_server):
         self.build_servers.append(build_server)
 
-    def iterate(self, func):
-        for build_server in self.build_servers:
-            func(build_server)
+    def __iter__(self):
+        return self.build_servers.__iter__()
     
     def clone(self):
         clone = BuildServerList()

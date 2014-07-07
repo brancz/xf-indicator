@@ -85,25 +85,33 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         for path in pathlist:
             tree_iter = model.get_iter(path)
             value = model.get_value(tree_iter, 0)
-            print value
 
     def set_projects(self, projects):
         self.projects = projects
 
         #cleanup
-        old_column = self.buildTreeview.get_column(0)
-        if old_column is not None:
-            self.buildTreeview.remove_column(old_column)
+        old_columns = self.buildTreeview.get_columns()
+        for column in old_columns:
+            self.buildTreeview.remove_column(column)
 
-        #build column
-        build_store = Gtk.ListStore(str)
+        build_store = Gtk.ListStore(str, str)
+
         self.buildTreeview.set_model(model=build_store)
+
+        #build server type column
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn('Name', renderer, text=0)
+        column = Gtk.TreeViewColumn('Build Server', renderer, text=0)
         column.set_sort_column_id(0)
         self.buildTreeview.append_column(column)
 
-        projects.iterate(lambda project: build_store.append([str(project)]))
+        #build column
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn('Name', renderer, text=0)
+        column.set_sort_column_id(1)
+        self.buildTreeview.append_column(column)
+
+        for project in projects:
+            build_store.append([project.type(), str(project)])
 
     def set_build_servers(self, build_servers):
         self.build_servers = build_servers
@@ -121,7 +129,8 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         column.set_sort_column_id(0)
         self.buildServerTreeview.append_column(column)
 
-        build_servers.iterate(lambda build_server: build_server_store.append([str(build_server)]))
+        for build_server in build_servers:
+            build_server_store.append([build_server.type()])
 
     def set_callback(self, callback):
         self.return_from_preferences_callback = callback

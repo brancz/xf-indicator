@@ -31,10 +31,12 @@ from build_status import BuildStatus
 from timer_with_resume import TimerWithResume
 from XfIndicatorHelpDialog import XfIndicatorHelpDialog
 from PreferencesXfIndicatorWindow import PreferencesXfIndicatorWindow
+from project_menu_item import ProjectMenuItem
+from status_subject import StatusSubject
 from gi.repository import AppIndicator3
 from gi.repository import Gtk
 
-class Indicator:
+class Indicator(StatusSubject):
     def __init__(self):
         self.indicator = AppIndicator3.Indicator.new("xf-indicator",
                                           "ubuntuone-client-idle",
@@ -43,13 +45,16 @@ class Indicator:
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
 
         self.projects = ProjectList()
-        self.projects.load()
+        self.projects.register_on_status_changed(self)
         self.build_servers = BuildServerList()
 
         BuildStatus.active.set_indicator_icon(self.indicator)
         self.indicator.set_menu(self.build_menu())
 
         self.setup_refresh_timer()
+
+    def on_status_changed(self, new_status):
+        new_status.set_indicator_icon(self.indicator)
 
     def on_preferences_activate(self, widget):
         preferences_window = PreferencesXfIndicatorWindow.instance()
@@ -68,12 +73,15 @@ class Indicator:
         self.new_projects = new_projects
         self.build_servers = new_build_servers
         self.indicator.set_menu(self.build_menu())
+        BuildStatus.active.set_indicator_icon(self.indicator)
         self.refresh_timer.resume()
 
     def build_menu(self):
         menu = Gtk.Menu()
 
-        self.projects.create_menu_items(menu)
+        for project in self.projects:
+            menu.append(ProjectMenuItem(project))
+
         self.add_menu_item(menu, "Preferences", self.on_preferences_activate)
         self.add_menu_item(menu, "Help", self.on_help_activate)
         self.add_menu_item(menu, "Quit", self.quit)
@@ -87,12 +95,8 @@ class Indicator:
         menu.append(item)
 
     def setup_refresh_timer(self):
-        self.refresh_timer = TimerWithResume(lambda: self.check_all_build_statuses())
+        self.refresh_timer = TimerWithResume(lambda: self.projects.refresh_build_status())
         self.refresh_timer.start()
 
-    def check_all_build_statuses(self):
-        self.projects.set_indicator_icon(self.indicator)
-
     def quit(self, widget):
-        self.projects.save()
         Gtk.main_quit()

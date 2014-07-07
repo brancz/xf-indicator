@@ -21,61 +21,34 @@
 ### END LICENSE
 
 from build_status import BuildStatus
+from status_subject import StatusSubject
 import yaml
 import os
 
-CONFIG_FILE=os.path.expanduser("~/.xf-indicator.yaml")
+#CONFIG_FILE=os.path.expanduser("~/.xf-indicator.yaml")
 
-class ProjectList(object):
-    def load(self):
-        try:
-            f = open(CONFIG_FILE, 'r')
-        except IOError:
-            print "Config file not found."
-        else:
-            self.projects = yaml.load(f)
-            if self.projects is None:
-                self.projects = ProjectList()
-            f.close()
-
-    def save(self):
-        try:
-            print "Saving config to " + CONFIG_FILE
-            f = open(CONFIG_FILE, 'w')
-        except IOError:
-            print "Could not save config."
-        else:
-            yaml.dump(self.projects, f)
-            f.close()
+class ProjectList(StatusSubject):
 
     def __init__(self):
         self.projects = []
+        self.status = None
+
+    def __iter__(self):
+        return self.projects.__iter__()
 
     def add_project(self, project):
         self.projects.append(project)
 
-    def status(self):
-        build_status = lambda project: project.build_status()
-        statuses = map(build_status, self.projects)
+    def refresh_build_status(self):
+        extract_build_status = lambda project: project.refresh_build_status()
+        statuses = map(extract_build_status, self.projects)
         try:
-            worst_status = min(statuses)
+            # the worst status is the smallest one
+            status = min(statuses)
         except ValueError:
             # occurs when statuses is empty, thus don't show an error
-            worst_status = BuildStatus.passing
-        print "aggregated status: " + str(worst_status)
-        return worst_status
-
-    def set_indicator_icon(self, indicator):
-        self.status().set_indicator_icon(indicator)
-
-    def create_menu_items(self, menu):
-        for project in self.projects:
-            project.add_menu_item(menu)
-    
-    def add_all_to_listbox(self, listbox):
-        for project in self.projects:
-            project.add_to_listbox(listbox, lambda: self.projects.remove(project))
-
-    def iterate(self, func):
-        for project in self.projects:
-            func(project)
+            status = BuildStatus.passing
+        if self.status is not status:
+            self.status = status
+            self.notify(status)
+        return self.status
