@@ -80,7 +80,7 @@ class PreferencesWindow(Gtk.Window):
         if project_entry_text != "":
             project = Project(project_entry_text, TravisCIOrg())
             project.add_to_listbox(self.listbox, self.projects.remove_from_listbox_callback)
-            self.projects.add_project(project)
+            self.projects.add(project)
             self.entry.set_text("")
 
     def add_add_project_button(self):

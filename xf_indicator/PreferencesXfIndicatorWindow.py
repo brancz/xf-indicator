@@ -78,13 +78,14 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         new_build_window.present()
 
     def new_build_callback(self, project):
-        self.projects.add_project(project)
+        self.projects.add(project)
+        self.set_projects(self.projects)
 
     def on_remove_project(self, widget):
         (model, pathlist) = self.buildTreeview.get_selection().get_selected_rows()
         for path in pathlist:
             tree_iter = model.get_iter(path)
-            value = model.get_value(tree_iter, 0)
+            print [model.get_value(tree_iter, 0), model.get_value(tree_iter, 1)]
 
     def set_projects(self, projects):
         self.projects = projects
@@ -106,7 +107,7 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
 
         #build column
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn('Name', renderer, text=0)
+        column = Gtk.TreeViewColumn('Name', renderer, text=1)
         column.set_sort_column_id(1)
         self.buildTreeview.append_column(column)
 

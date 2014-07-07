@@ -22,6 +22,7 @@
 
 from build_status import BuildStatus
 from status_subject import StatusSubject
+from sets import Set
 import yaml
 import os
 
@@ -30,14 +31,17 @@ import os
 class ProjectList(StatusSubject):
 
     def __init__(self):
-        self.projects = []
+        self.projects = Set()
         self.status = None
 
     def __iter__(self):
         return self.projects.__iter__()
 
-    def add_project(self, project):
-        self.projects.append(project)
+    def add(self, project):
+        self.projects.add(project)
+
+    def remove(self, project):
+        self.projects.remove(project)
 
     def refresh_build_status(self):
         extract_build_status = lambda project: project.refresh_build_status()
