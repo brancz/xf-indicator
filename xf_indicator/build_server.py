@@ -78,6 +78,9 @@ class TravisCIOrg(TravisCIEnterprise):
     def __init__(self):
         super(TravisCIOrg, self).__init__("https://travis-ci.org/", "https://api.travis-ci.org/", "")
 
+    def __str__(self):
+        return self.type()
+
     def type(self):
         return "travis-ci.org"
 

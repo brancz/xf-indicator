@@ -35,7 +35,7 @@ logger = logging.getLogger('xf_indicator')
 
 from xf_indicator_lib.PreferencesWindow import PreferencesWindow
 from NewBuildXfIndicatorWindow import NewBuildXfIndicatorWindow
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 
 class PreferencesXfIndicatorWindow(PreferencesWindow):
     __gtype_name__ = "PreferencesXfIndicatorWindow"
@@ -85,7 +85,9 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         (model, pathlist) = self.buildTreeview.get_selection().get_selected_rows()
         for path in pathlist:
             tree_iter = model.get_iter(path)
-            print [model.get_value(tree_iter, 0), model.get_value(tree_iter, 1)]
+            project = model.get_value(tree_iter, 0)
+            self.projects.remove(project)
+            self.set_projects(self.projects)
 
     def set_projects(self, projects):
         self.projects = projects
@@ -95,7 +97,7 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         for column in old_columns:
             self.buildTreeview.remove_column(column)
 
-        build_store = Gtk.ListStore(str, str)
+        build_store = Gtk.ListStore(GObject.TYPE_PYOBJECT, GObject.TYPE_PYOBJECT)
 
         self.buildTreeview.set_model(model=build_store)
 
@@ -103,16 +105,24 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn('Build Server', renderer, text=0)
         column.set_sort_column_id(0)
+        def extract_project_type(column, cell, model, iter, user_data):
+            build_server_name = model.get_value(iter, 0).build_server_name()
+            cell.props.text = build_server_name
+        column.set_cell_data_func(renderer, extract_project_type)
         self.buildTreeview.append_column(column)
 
         #build column
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn('Name', renderer, text=1)
         column.set_sort_column_id(1)
+        def extract_project_name(column, cell, model, iter, user_data):
+            project = model.get_value(iter, 1)
+            cell.props.text = str(project)
+        column.set_cell_data_func(renderer, extract_project_name)
         self.buildTreeview.append_column(column)
 
         for project in projects:
-            build_store.append([project.type(), str(project)])
+            build_store.append([project, project])
 
     def set_build_servers(self, build_servers):
         self.build_servers = build_servers

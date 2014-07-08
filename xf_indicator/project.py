@@ -37,11 +37,8 @@ class Project(StatusSubject):
     def __str__(self):
         return self.name
 
-    def type(self):
-        return self.build_server.type()
-
-    def name(self):
-        return self.name
+    def build_server_name(self):
+        return str(self.build_server)
 
     def set_status(self, new_status):
         if self.status is not new_status: 
