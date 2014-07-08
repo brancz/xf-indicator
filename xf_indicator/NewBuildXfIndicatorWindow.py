@@ -55,6 +55,7 @@ class NewBuildXfIndicatorWindow(NewBuildWindow):
 
         self.build_server_combobox = builder.get_object("buildServerCombobox")
         self.build_name_entry = builder.get_object("buildNameEntry")
+        self.build_name_entry.connect("activate", self.on_enter_pressed)
         self.add_build_button = builder.get_object("addBuildButton")
         self.add_build_button.connect("clicked", self.on_add_build_button_activate)
 
@@ -67,7 +68,13 @@ class NewBuildXfIndicatorWindow(NewBuildWindow):
         window.hide()
         return True
 
+    def on_enter_pressed(self, widget):
+        self.add_and_hide()
+
     def on_add_build_button_activate(self, widget):
+        self.add_and_hide()
+    
+    def add_and_hide(self):
         project_name = self.build_name_entry.get_text()
         if not project_name:
             # please provide a build-name
