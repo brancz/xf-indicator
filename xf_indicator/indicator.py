@@ -48,7 +48,6 @@ class Indicator(StatusSubject):
         self.projects.register_on_status_changed(self)
         self.build_servers = BuildServerList()
 
-        BuildStatus.active.set_indicator_icon(self.indicator)
         self.indicator.set_menu(self.build_menu())
 
         self.setup_refresh_timer()
@@ -73,7 +72,6 @@ class Indicator(StatusSubject):
         self.new_projects = new_projects
         self.build_servers = new_build_servers
         self.indicator.set_menu(self.build_menu())
-        BuildStatus.active.set_indicator_icon(self.indicator)
         self.refresh_timer.resume()
 
     def build_menu(self):
@@ -95,8 +93,11 @@ class Indicator(StatusSubject):
         menu.append(item)
 
     def setup_refresh_timer(self):
-        self.refresh_timer = TimerWithResume(lambda: self.projects.refresh_build_status())
+        self.refresh_timer = TimerWithResume(lambda: self.refresh_loop())
         self.refresh_timer.start()
+
+    def refresh_loop(self):
+        self.projects.refresh_build_status()
 
     def quit(self, widget):
         Gtk.main_quit()
