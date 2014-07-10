@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.16.1 -->
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkWindow" id="new_build_server_xf_indicator_window">
+  <object class="NewBuildServerXfIndicatorWindow" id="new_build_server_xf_indicator_window">
     <property name="can_focus">False</property>
     <child>
       <object class="GtkBox" id="newBuildBox">
@@ -15,11 +15,11 @@
         <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
-          <object class="GtkBox" id="buildServerBox">
+          <object class="GtkBox" id="buildServerTypeBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkLabel" id="buildServerLabel">
+              <object class="GtkLabel" id="buildServerTypeLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Build Server Type</property>
@@ -31,7 +31,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="buildServerCombobox">
+              <object class="GtkComboBox" id="buildServerTypeCombobox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
               </object>
@@ -50,7 +50,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="buildNameBox">
+          <object class="GtkBox" id="buildServerNameBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
@@ -66,7 +66,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="buildNameEntry">
+              <object class="GtkEntry" id="buildServerNameEntry">
                 <property name="width_request">50</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -87,44 +87,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="buildServerRequirements">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
+          <placeholder/>
         </child>
         <child>
-          <object class="GtkBox" id="addBuildBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkButton" id="addBuildButton">
-                <property name="label" translatable="yes">ADD</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
+          <placeholder/>
         </child>
       </object>
     </child>

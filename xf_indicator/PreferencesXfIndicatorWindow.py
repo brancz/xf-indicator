@@ -35,6 +35,7 @@ logger = logging.getLogger('xf_indicator')
 
 from xf_indicator_lib.PreferencesWindow import PreferencesWindow
 from NewBuildXfIndicatorWindow import NewBuildXfIndicatorWindow
+from NewBuildServerXfIndicatorWindow import NewBuildServerXfIndicatorWindow
 from gi.repository import Gtk, GObject
 
 class PreferencesXfIndicatorWindow(PreferencesWindow):
@@ -58,6 +59,8 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         builder.get_object("removeBuildButton").connect("clicked", self.on_remove_project)
 
         self.buildServerTreeview = builder.get_object("buildServerTreeview")
+        builder.get_object("addBuildServerButton").connect("clicked", self.on_add_build_server)
+        builder.get_object("removeBuildServerButton").connect("clicked", self.on_remove_build_server)
 
         self.connect("delete-event", self.quit)
         self.set_position(Gtk.WindowPosition.CENTER)
@@ -123,6 +126,12 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
 
         for project in projects:
             build_store.append([project, project])
+
+    def on_add_build_server(self, widget):
+        NewBuildServerXfIndicatorWindow().present()
+
+    def on_remove_build_server(self, widget):
+        print "remove build server"
 
     def set_build_servers(self, build_servers):
         self.build_servers = build_servers
