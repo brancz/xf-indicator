@@ -36,7 +36,8 @@ logger = logging.getLogger('xf_indicator')
 
 from xf_indicator_lib.NewBuildServerWindow import NewBuildServerWindow
 from project import Project
-from gi.repository import Gtk
+from build_server_builder import JenkinsServerBuildStrategy, TravisCIEnterpriseServerBuildStrategy
+from gi.repository import Gtk, GObject
 
 class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
     __gtype_name__ = "NewBuildServerXfIndicatorWindow"
@@ -54,6 +55,8 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
 
         # Code for other initialization actions should be added here.
 
+        self.main_list_box = builder.get_object("newBuildServerBox")
+
         self.build_server_type_combobox = builder.get_object("buildServerTypeCombobox")
 
         self.build_server_type_store = Gtk.ListStore(str)
@@ -61,10 +64,12 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
             self.build_server_type_store.append([build_server_class.type()])
 
         self.build_server_type_combobox.set_model(model=self.build_server_type_store)
+
         renderer_text = Gtk.CellRendererText()
 
         self.build_server_type_combobox.pack_start(renderer_text, True)
         self.build_server_type_combobox.add_attribute(renderer_text, "text", 0)
+        self.build_server_type_combobox.connect("changed", self.on_build_server_type_changed)
 
         self.build_server_name_entry = builder.get_object("buildServerNameEntry")
         self.build_server_name_entry.connect("activate", self.on_enter_pressed)
@@ -72,6 +77,18 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         self.connect("delete-event", self.quit)
         self.set_position(Gtk.WindowPosition.CENTER)
 
+        self.show_all()
+
+    def on_build_server_type_changed(self, widget):
+        iter = self.build_server_type_combobox.get_active_iter()
+        type = self.build_server_type_combobox.get_model().get_value(iter, 0)
+        builders = {"Jenkins": JenkinsServerBuildStrategy, "Travis-CI Enterprise": TravisCIEnterpriseServerBuildStrategy}
+        builder = builders[type]()
+        if(hasattr(self, 'build_server_specific_row')):
+            self.main_list_box.remove(self.build_server_specific_row)
+        self.build_server_specific_row = Gtk.ListBoxRow()
+        builder.add_form(self.build_server_specific_row)
+        self.main_list_box.add(self.build_server_specific_row)
         self.show_all()
 
     def quit(self, window, event):

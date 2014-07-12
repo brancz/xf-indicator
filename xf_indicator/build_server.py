@@ -28,6 +28,12 @@ from jenkinsapi.custom_exceptions import UnknownJob
 from build_status import BuildStatus
 
 class BuildServer(object):
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
     def latest_status_of(self, name):
         raise NotImplementedError()
 
@@ -47,7 +53,8 @@ class BuildServer(object):
 
 class TravisCIEnterprise(BuildServer):
 
-    def __init__(self, base_url, base_api_url, token):
+    def __init__(self, name, base_url, base_api_url, token):
+        super(TravisCIEnterprise, self).__init__(name)
         self.base_url = base_url
         self.base_api_url = base_api_url
         self.token = token
@@ -84,28 +91,25 @@ class TravisCIEnterprise(BuildServer):
 
 class TravisCIOrg(TravisCIEnterprise):
     def __init__(self):
-        super(TravisCIOrg, self).__init__("https://travis-ci.org/", "https://api.travis-ci.org/", "")
-
-    def __str__(self):
-        return self.type()
+        super(TravisCIOrg, self).__init__("Travis CI", "https://travis-ci.org/", "https://api.travis-ci.org/", "")
 
     def type(self):
-        return "travis-ci.org"
+        return "Travis CI"
 
     @classmethod
     def type(self):
-        return "travis-ci.org"
+        return "Travis CI"
 
 class TravisCICom(TravisCIEnterprise):
     def __init__(self, token):
-        super(TravisCICom, self).__init__("https://travis-ci.com/", "https://api.travis-ci.com/", token)
+        super(TravisCICom, self).__init__("Travis CI Pro", "https://travis-ci.com/", "https://api.travis-ci.com/", token)
 
     def type(self):
-        return "travis-ci.com"
+        return "Travis CI Pro"
 
     @classmethod
     def type(self):
-        return "travis-ci.com"
+        return "Travis CI Pro"
 
 class SSLRequester(Requester):
     def __init__(self, username, password, verify):
@@ -118,7 +122,8 @@ class SSLRequester(Requester):
         return requestKWargs
 
 class JenkinsBuildServer(BuildServer):
-    def __init__(self, url, username=None, password=None, verify=True):
+    def __init__(self, name, url, username=None, password=None, verify=True):
+        super(BuildServer, self).__init__(name)
         ssl_requester = SSLRequester(username, password, verify)
         self.jenkins = Jenkins(url, requester=ssl_requester)
 
