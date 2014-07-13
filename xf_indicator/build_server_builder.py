@@ -70,14 +70,18 @@ class JenkinsServerBuildStrategy(BuildServerBuildStrategy):
         vbox.add(secure_row)
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         secure_row.add(hbox)
-        self.secure_label = Gtk.Label("Secure", xalign=0)
+        self.secure_label = Gtk.Label("Verify SSL?", xalign=0)
         self.secure_check = Gtk.CheckButton()
         self.secure_check.set_active(True)
         hbox.pack_start(self.secure_label, True, True, 0)
         hbox.pack_start(self.secure_check, False, True, 0)
 
     def build(self, name):
-        return JenkinsBuildServer("https://ci.pondati.net/", username="flower-pot", password="Asdfmnsek123!", verify=False)
+        host = self.host_entry.get_text()
+        username = self.user_entry.get_text()
+        password = self.pass_entry.get_text()
+        secure = self.secure_check.get_active()
+        return JenkinsBuildServer(name, host, username=username, password=password, verify=secure)
 
 class TravisCIEnterpriseServerBuildStrategy(BuildServerBuildStrategy):
     def add_form(self, row):

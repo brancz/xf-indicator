@@ -72,7 +72,6 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         self.build_server_type_combobox.connect("changed", self.on_build_server_type_changed)
 
         self.build_server_name_entry = builder.get_object("buildServerNameEntry")
-        self.build_server_name_entry.connect("activate", self.on_enter_pressed)
 
         self.connect("delete-event", self.quit)
         self.set_position(Gtk.WindowPosition.CENTER)
@@ -83,13 +82,31 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         iter = self.build_server_type_combobox.get_active_iter()
         type = self.build_server_type_combobox.get_model().get_value(iter, 0)
         builders = {"Jenkins": JenkinsServerBuildStrategy, "Travis-CI Enterprise": TravisCIEnterpriseServerBuildStrategy}
-        builder = builders[type]()
+        self.builder = builders[type]()
         if(hasattr(self, 'build_server_specific_row')):
             self.main_list_box.remove(self.build_server_specific_row)
+        if(hasattr(self, 'add_row')):
+            self.main_list_box.remove(self.add_row)
         self.build_server_specific_row = Gtk.ListBoxRow()
-        builder.add_form(self.build_server_specific_row)
+        self.builder.add_form(self.build_server_specific_row)
         self.main_list_box.add(self.build_server_specific_row)
+
+        self.add_row = Gtk.ListBoxRow()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        self.add_row.add(hbox)
+        add_button = Gtk.Button("ADD")
+        add_button.connect("clicked", self.on_add)
+        hbox.pack_start(add_button, True, True, 0)
+        self.add_row.add(hbox)
+
+        self.main_list_box.add(self.add_row)
+
         self.show_all()
+
+    def on_add(self, widget):
+        name = self.build_server_name_entry.get_text()
+        build_server = self.builder.build(name)
+        print build_server
 
     def quit(self, window, event):
         window.hide()
