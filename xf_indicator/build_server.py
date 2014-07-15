@@ -123,8 +123,8 @@ class SSLRequester(Requester):
 
 class JenkinsBuildServer(BuildServer):
     def __init__(self, name, url, username=None, password=None, verify=True):
-        #super(BuildServer, self).__init__(name)
         self.name = name
+        self.url = url
         ssl_requester = SSLRequester(username, password, verify)
         self.jenkins = Jenkins(url, requester=ssl_requester)
 
@@ -143,7 +143,7 @@ class JenkinsBuildServer(BuildServer):
             return 'NOT_EXISTING'
 
     def latest_build_url_of(self, name):
-        return url + "/job/" + name + "/lastBuild/"
+        return self.url + "/job/" + name + "/lastBuild/"
 
     def type(self):
         return "Jenkins"

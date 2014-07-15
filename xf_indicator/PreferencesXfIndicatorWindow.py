@@ -128,7 +128,13 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
             build_store.append([project, project])
 
     def on_add_build_server(self, widget):
-        NewBuildServerXfIndicatorWindow().present()
+        build_server_window = NewBuildServerXfIndicatorWindow()
+        build_server_window.set_callback(self.new_build_server_callback)
+        build_server_window.present()
+
+    def new_build_server_callback(self, new_build_server):
+        self.build_servers.add(new_build_server)
+        self.set_build_servers(self.build_servers)
 
     def on_remove_build_server(self, widget):
         print "remove build server"

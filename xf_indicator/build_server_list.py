@@ -32,7 +32,7 @@ class BuildServerList(object):
     def get(self, index):
         return self.build_servers[index]
 
-    def add_build_server(self, build_server):
+    def add(self, build_server):
         self.build_servers.append(build_server)
 
     def __iter__(self):

@@ -106,7 +106,8 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
     def on_add(self, widget):
         name = self.build_server_name_entry.get_text()
         build_server = self.builder.build(name)
-        print build_server
+        self.add_callback(build_server)
+        self.hide()
 
     def quit(self, window, event):
         window.hide()
@@ -132,5 +133,5 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         #self.add_callback(project)
         self.hide()
 
-    def set_add_callback(self, callback):
+    def set_callback(self, callback):
         self.add_callback = callback
