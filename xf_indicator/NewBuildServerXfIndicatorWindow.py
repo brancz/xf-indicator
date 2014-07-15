@@ -36,7 +36,7 @@ logger = logging.getLogger('xf_indicator')
 
 from xf_indicator_lib.NewBuildServerWindow import NewBuildServerWindow
 from project import Project
-from build_server_builder import JenkinsServerBuildStrategy, TravisCIEnterpriseServerBuildStrategy
+from build_server_builder import JenkinsServerBuilder, TravisCIEnterpriseServerBuilder
 from gi.repository import Gtk, GObject
 
 class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
@@ -62,8 +62,8 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         self.build_server_type_store = Gtk.ListStore(str)
 
         self.build_server_type_map = {
-            "Travis CI Enterprise": TravisCIEnterpriseServerBuildStrategy,
-            "Jenkins": JenkinsServerBuildStrategy
+            "Travis CI Enterprise": TravisCIEnterpriseServerBuilder,
+            "Jenkins": JenkinsServerBuilder
         }
 
         for build_server_type in self.build_server_type_map:

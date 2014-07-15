@@ -23,14 +23,14 @@
 from build_server import JenkinsBuildServer, TravisCIEnterprise, TravisCICom 
 from gi.repository import Gtk
 
-class BuildServerBuildStrategy(object):
+class BuildServerBuilder(object):
     def add_form(self, row):
         raise NotImplementedError()
 
     def build(self, name):
         raise NotImplementedError()
 
-class JenkinsServerBuildStrategy(BuildServerBuildStrategy):
+class JenkinsServerBuilder(BuildServerBuilder):
     def add_form(self, row):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         row.add(vbox)
@@ -83,7 +83,7 @@ class JenkinsServerBuildStrategy(BuildServerBuildStrategy):
         secure = self.secure_check.get_active()
         return JenkinsBuildServer(name, host, username=username, password=password, verify=secure)
 
-class TravisCIEnterpriseServerBuildStrategy(BuildServerBuildStrategy):
+class TravisCIEnterpriseServerBuilder(BuildServerBuilder):
     def add_form(self, row):
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
         row.add(hbox)
