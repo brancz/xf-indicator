@@ -60,8 +60,14 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         self.build_server_type_combobox = builder.get_object("buildServerTypeCombobox")
 
         self.build_server_type_store = Gtk.ListStore(str)
-        for build_server_class in BuildServer.__subclasses__():
-            self.build_server_type_store.append([build_server_class.type()])
+
+        self.build_server_type_map = {
+            "Travis CI Enterprise": TravisCIEnterpriseServerBuildStrategy,
+            "Jenkins": JenkinsServerBuildStrategy
+        }
+
+        for build_server_type in self.build_server_type_map:
+            self.build_server_type_store.append([build_server_type])
 
         self.build_server_type_combobox.set_model(model=self.build_server_type_store)
 
@@ -81,8 +87,7 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
     def on_build_server_type_changed(self, widget):
         iter = self.build_server_type_combobox.get_active_iter()
         type = self.build_server_type_combobox.get_model().get_value(iter, 0)
-        builders = {"Jenkins": JenkinsServerBuildStrategy, "Travis-CI Enterprise": TravisCIEnterpriseServerBuildStrategy}
-        self.builder = builders[type]()
+        self.builder = self.build_server_type_map[type]()
         if(hasattr(self, 'build_server_specific_row')):
             self.main_list_box.remove(self.build_server_specific_row)
         if(hasattr(self, 'add_row')):
@@ -115,23 +120,6 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
 
     def on_enter_pressed(self, widget):
         self.add_and_hide()
-
-    def on_add_build_server_button_activate(self, widget):
-        self.add_and_hide()
-    
-    def add_and_hide(self):
-        build_server_name = self.build_name_entry.get_text()
-        if not project_name:
-            # please provide a build-name
-            return
-        build_server_type_index = self.build_server_combobox.get_active()
-        if project_build_server_index is -1:
-            # please select a build-server
-            return
-        build_server_type = self.build_servers.get(project_build_server_index)
-        #build_server = BuildServer(project_name, project_build_server)
-        #self.add_callback(project)
-        self.hide()
 
     def set_callback(self, callback):
         self.add_callback = callback
