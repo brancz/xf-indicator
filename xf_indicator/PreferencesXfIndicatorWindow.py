@@ -143,20 +143,35 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         self.build_servers = build_servers
 
         #cleanup
-        old_column = self.buildServerTreeview.get_column(0)
-        if old_column is not None:
-            self.buildServerTreeview.remove_column(old_column)
+        old_columns = self.buildServerTreeview.get_columns()
+        for column in old_columns:
+            self.buildServerTreeview.remove_column(column)
 
-        #build column
-        build_server_store = Gtk.ListStore(str)
+        build_server_store = Gtk.ListStore(GObject.TYPE_PYOBJECT, GObject.TYPE_PYOBJECT)
         self.buildServerTreeview.set_model(model=build_server_store)
+
+        #build server type column
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn('Type', renderer, text=0)
+        column.set_sort_column_id(0)
+        def extract_build_server_type(column, cell, model, iter, user_data):
+            build_server_type = model.get_value(iter, 0).type()
+            cell.props.text = build_server_type
+        column.set_cell_data_func(renderer, extract_build_server_type)
+        self.buildServerTreeview.append_column(column)
+
+        #build server name column
         renderer = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn('Name', renderer, text=0)
-        column.set_sort_column_id(0)
+        column.set_sort_column_id(1)
+        def extract_build_server_name(column, cell, model, iter, user_data):
+            build_server_name = str(model.get_value(iter, 1))
+            cell.props.text = build_server_name
+        column.set_cell_data_func(renderer, extract_build_server_name)
         self.buildServerTreeview.append_column(column)
 
         for build_server in build_servers:
-            build_server_store.append([build_server.type()])
+            build_server_store.append([build_server, build_server])
 
     def set_callback(self, callback):
         self.return_from_preferences_callback = callback
