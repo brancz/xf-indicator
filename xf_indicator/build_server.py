@@ -43,14 +43,6 @@ class BuildServer(object):
     def type(self):
         raise NotImplementedError()
 
-    @classmethod
-    def type(self):
-        raise NotImplementedError()
-
-    @classmethod
-    def types(cls):
-        return cls.__subclasses__()
-
 class TravisCIEnterprise(BuildServer):
 
     def __init__(self, name, base_url, base_api_url, token):
@@ -85,18 +77,10 @@ class TravisCIEnterprise(BuildServer):
     def type(self):
         return "Travis-CI Enterprise"
 
-    @classmethod
-    def type(self):
-        return "Travis-CI Enterprise"
-
 class TravisCIOrg(TravisCIEnterprise):
     def __init__(self):
         super(TravisCIOrg, self).__init__("Travis CI", "https://travis-ci.org/", "https://api.travis-ci.org/", "")
 
-    def type(self):
-        return "Travis CI"
-
-    @classmethod
     def type(self):
         return "Travis CI"
 
@@ -145,9 +129,5 @@ class JenkinsBuildServer(BuildServer):
     def latest_build_url_of(self, name):
         return self.url + "/job/" + name + "/lastBuild/"
 
-    def type(self):
-        return "Jenkins"
-
-    @classmethod
     def type(self):
         return "Jenkins"
