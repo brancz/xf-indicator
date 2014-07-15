@@ -95,7 +95,7 @@ class NewBuildXfIndicatorWindow(NewBuildWindow):
         self.build_servers = build_servers
         build_server_store = Gtk.ListStore(str)
         for build_server in build_servers:
-            build_server_store.append([build_server.type()])
+            build_server_store.append([str(build_server)])
         self.build_server_combobox.set_model(model=build_server_store)
         renderer_text = Gtk.CellRendererText()
         self.build_server_combobox.pack_start(renderer_text, True)
