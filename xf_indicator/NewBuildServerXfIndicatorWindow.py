@@ -87,22 +87,17 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
     def on_build_server_type_changed(self, widget):
         iter = self.build_server_type_combobox.get_active_iter()
         type = self.build_server_type_combobox.get_model().get_value(iter, 0)
-        self.builder = self.build_server_type_to_builder[type]()
-        if(hasattr(self, 'build_server_specific_row')):
-            self.main_list_box.remove(self.build_server_specific_row)
+        if(hasattr(self, 'server_builder')):
+            self.server_builder.remove()
         if(hasattr(self, 'add_row')):
             self.main_list_box.remove(self.add_row)
-        self.build_server_specific_row = Gtk.ListBoxRow()
-        self.builder.add_form(self.build_server_specific_row)
-        self.main_list_box.add(self.build_server_specific_row)
+        self.server_builder = self.build_server_type_to_builder[type](self.main_list_box)
+        self.server_builder.add_form()
 
-        self.add_row = Gtk.ListBoxRow()
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        self.add_row.add(hbox)
+        self.add_row =Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         add_button = Gtk.Button("ADD")
         add_button.connect("clicked", self.on_add)
-        hbox.pack_start(add_button, True, True, 0)
-        self.add_row.add(hbox)
+        self.add_row.pack_start(add_button, True, True, 0)
 
         self.main_list_box.add(self.add_row)
 
@@ -110,7 +105,7 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
 
     def on_add(self, widget):
         name = self.build_server_name_entry.get_text()
-        build_server = self.builder.build(name)
+        build_server = self.server_builder.build(name)
         self.add_callback(build_server)
         self.hide()
 

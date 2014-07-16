@@ -24,57 +24,55 @@ from build_server import JenkinsBuildServer, TravisCIEnterprise, TravisCICom
 from gi.repository import Gtk
 
 class BuildServerBuilder(object):
-    def add_form(self, row):
+    def __init__(self, box):
+        self.box = box
+
+    def add_form(self):
         raise NotImplementedError()
 
     def build(self, name):
         raise NotImplementedError()
 
-class JenkinsServerBuilder(BuildServerBuilder):
-    def add_form(self, row):
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        row.add(vbox)
+    def remove(self):
+        for row in self.rows:
+            self.box.remove(row)
 
+class JenkinsServerBuilder(BuildServerBuilder):
+    def add_form(self):
         #host
-        host_row = Gtk.ListBoxRow()
-        vbox.add(host_row)
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        host_row.add(hbox)
+        host_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.add(host_row)
         self.host_label = Gtk.Label("Host", xalign=0)
         self.host_entry = Gtk.Entry(xalign=0)
-        hbox.pack_start(self.host_label, True, True, 0)
-        hbox.pack_start(self.host_entry, False, True, 0)
+        host_row.pack_start(self.host_label, True, True, 0)
+        host_row.pack_start(self.host_entry, False, True, 0)
 
         #user
-        user_row = Gtk.ListBoxRow()
-        vbox.add(user_row)
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        user_row.add(hbox)
+        user_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.add(user_row)
         self.user_label = Gtk.Label("User", xalign=0)
         self.user_entry = Gtk.Entry(xalign=0)
-        hbox.pack_start(self.user_label, True, True, 0)
-        hbox.pack_start(self.user_entry, False, True, 0)
+        user_row.pack_start(self.user_label, True, True, 0)
+        user_row.pack_start(self.user_entry, False, True, 0)
 
         #password
-        pass_row = Gtk.ListBoxRow()
-        vbox.add(pass_row)
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        pass_row.add(hbox)
+        pass_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.add(pass_row)
         self.pass_label = Gtk.Label("Password", xalign=0)
         self.pass_entry = Gtk.Entry(xalign=0)
-        hbox.pack_start(self.pass_label, True, True, 0)
-        hbox.pack_start(self.pass_entry, False, True, 0)
+        pass_row.pack_start(self.pass_label, True, True, 0)
+        pass_row.pack_start(self.pass_entry, False, True, 0)
 
         #secure?
-        secure_row = Gtk.ListBoxRow()
-        vbox.add(secure_row)
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        secure_row.add(hbox)
+        secure_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.add(secure_row)
         self.secure_label = Gtk.Label("Verify SSL?", xalign=0)
         self.secure_check = Gtk.CheckButton()
         self.secure_check.set_active(True)
-        hbox.pack_start(self.secure_label, True, True, 0)
-        hbox.pack_start(self.secure_check, False, True, 0)
+        secure_row.pack_start(self.secure_label, True, True, 0)
+        secure_row.pack_start(self.secure_check, False, True, 0)
+
+        self.rows = [host_row, user_row, pass_row, secure_row]
 
     def build(self, name):
         host = self.host_entry.get_text()
@@ -84,13 +82,15 @@ class JenkinsServerBuilder(BuildServerBuilder):
         return JenkinsBuildServer(name, host, username=username, password=password, verify=secure)
 
 class TravisCIEnterpriseServerBuilder(BuildServerBuilder):
-    def add_form(self, row):
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
-        row.add(hbox)
+    def add_form(self):
+        host_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
+        self.box.add(host_row)
         self.host_label = Gtk.Label("Host", xalign=0)
         self.host_entry = Gtk.Entry(xalign=0)
-        hbox.pack_start(self.host_label, True, True, 0)
-        hbox.pack_start(self.host_entry, False, True, 0)
+        host_row.pack_start(self.host_label, True, True, 0)
+        host_row.pack_start(self.host_entry, False, True, 0)
+
+        self.rows = [host_row]
 
     def build(self, name):
         return JenkinsBuildServer("https://ci.pondati.net/", username="flower-pot", password="Asdfmnsek123!", verify=False)
