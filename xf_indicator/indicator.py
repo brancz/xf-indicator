@@ -26,7 +26,6 @@ import threading
 
 from project_list import ProjectList
 from build_server_list import BuildServerList
-from preferences_window import PreferencesWindow
 from build_status import BuildStatus
 from timer_with_resume import TimerWithResume
 from XfIndicatorHelpDialog import XfIndicatorHelpDialog
@@ -68,7 +67,6 @@ class Indicator(StatusSubject):
         help_dialog.present()
 
     def return_from_preferences_callback(self, new_projects, new_build_servers):
-        # set new project list and reset connected components
         self.new_projects = new_projects
         self.build_servers = new_build_servers
         self.indicator.set_menu(self.build_menu())
@@ -93,11 +91,8 @@ class Indicator(StatusSubject):
         menu.append(item)
 
     def setup_refresh_timer(self):
-        self.refresh_timer = TimerWithResume(lambda: self.refresh_loop())
+        self.refresh_timer = TimerWithResume(self.projects.refresh_build_status)
         self.refresh_timer.start()
-
-    def refresh_loop(self):
-        self.projects.refresh_build_status()
 
     def quit(self, widget):
         Gtk.main_quit()

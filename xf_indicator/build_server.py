@@ -95,13 +95,13 @@ class TravisCICom(TravisCIEnterprise):
     def type(self):
         return "Travis CI Pro"
 
-class SSLRequester(Requester):
+class SSLNoVerifyRequester(Requester):
     def __init__(self, username, password, verify):
-        super(SSLRequester, self).__init__(username, password)
+        super(SSLNoVerifyRequester, self).__init__(username, password)
         self.verify = verify
 
     def get_request_dict(self, params, headers):
-        requestKWargs = super(SSLRequester, self).get_request_dict(params, headers)
+        requestKWargs = super(SSLNoVerifyRequester, self).get_request_dict(params, headers)
         requestKWargs['verify'] = self.verify
         return requestKWargs
 
@@ -109,7 +109,7 @@ class JenkinsBuildServer(BuildServer):
     def __init__(self, name, url, username=None, password=None, verify=True):
         self.name = name
         self.url = url
-        ssl_requester = SSLRequester(username, password, verify)
+        ssl_requester = SSLNoVerifyRequester(username, password, verify)
         self.jenkins = Jenkins(url, requester=ssl_requester)
 
     def latest_status_of(self, name):

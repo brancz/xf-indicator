@@ -61,12 +61,12 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
 
         self.build_server_type_store = Gtk.ListStore(str)
 
-        self.build_server_type_map = {
+        self.build_server_type_to_builder = {
             "Travis CI Enterprise": TravisCIEnterpriseServerBuilder,
             "Jenkins": JenkinsServerBuilder
         }
 
-        for build_server_type in self.build_server_type_map:
+        for build_server_type in self.build_server_type_to_builder:
             self.build_server_type_store.append([build_server_type])
 
         self.build_server_type_combobox.set_model(model=self.build_server_type_store)
@@ -87,7 +87,7 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
     def on_build_server_type_changed(self, widget):
         iter = self.build_server_type_combobox.get_active_iter()
         type = self.build_server_type_combobox.get_model().get_value(iter, 0)
-        self.builder = self.build_server_type_map[type]()
+        self.builder = self.build_server_type_to_builder[type]()
         if(hasattr(self, 'build_server_specific_row')):
             self.main_list_box.remove(self.build_server_specific_row)
         if(hasattr(self, 'add_row')):

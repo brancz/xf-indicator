@@ -37,9 +37,3 @@ class BuildServerList(object):
 
     def __iter__(self):
         return self.build_servers.__iter__()
-    
-    def clone(self):
-        clone = BuildServerList()
-        for build_server in self.build_servers:
-            clone.add_build_server(build_server)
-        return clone
