@@ -35,5 +35,8 @@ class BuildServerList(object):
     def add(self, build_server):
         self.build_servers.append(build_server)
 
+    def remove(self, build_server):
+        self.build_servers.remove(build_server)
+
     def __iter__(self):
         return self.build_servers.__iter__()

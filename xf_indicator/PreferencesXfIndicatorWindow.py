@@ -137,7 +137,12 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         self.set_build_servers(self.build_servers)
 
     def on_remove_build_server(self, widget):
-        print "remove build server"
+        (model, pathlist) = self.buildServerTreeview.get_selection().get_selected_rows()
+        for path in pathlist:
+            tree_iter = model.get_iter(path)
+            build_server = model.get_value(tree_iter, 0)
+            self.build_servers.remove(build_server)
+            self.set_build_servers(self.build_servers)
 
     def set_build_servers(self, build_servers):
         self.build_servers = build_servers
