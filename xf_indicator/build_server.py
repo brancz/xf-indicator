@@ -24,6 +24,7 @@ import logging
 logger = logging.getLogger('xf_indicator')
 
 import json, requests
+from urlparse import urljoin
 from jenkinsapi.jenkins import Jenkins
 from jenkinsapi.utils.requester import Requester
 from jenkinsapi.custom_exceptions import NoBuildData
@@ -75,7 +76,7 @@ class TravisCIEnterprise(BuildServer):
             return BuildStatus.active
 
     def latest_build_url_of(self, name):
-        return self.base_url + name
+        return urljoin(self.base_url,  name)
 
     def type(self):
         return "Travis-CI Enterprise"
@@ -130,7 +131,7 @@ class JenkinsBuildServer(BuildServer):
             return 'NOT_EXISTING'
 
     def latest_build_url_of(self, name):
-        return self.url + "/job/" + name + "/lastBuild/"
+        return urljoin(self.url, "/job/" + name + "/lastBuild/")
 
     def type(self):
         return "Jenkins"
