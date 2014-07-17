@@ -60,6 +60,7 @@ class JenkinsServerBuilder(BuildServerBuilder):
         self.box.add(pass_row)
         self.pass_label = Gtk.Label("Password", xalign=0)
         self.pass_entry = Gtk.Entry(xalign=0)
+        self.pass_entry.set_visibility(False)
         pass_row.pack_start(self.pass_label, True, True, 0)
         pass_row.pack_start(self.pass_entry, False, True, 0)
 
