@@ -20,6 +20,9 @@
 # THE SOFTWARE.
 ### END LICENSE
 
+import logging
+logger = logging.getLogger('xf_indicator')
+
 import json, requests
 from jenkinsapi.jenkins import Jenkins
 from jenkinsapi.utils.requester import Requester
@@ -68,7 +71,7 @@ class TravisCIEnterprise(BuildServer):
                 return BuildStatus.unknown
             return BuildStatus.failing
         except requests.ConnectionError:
-            print "A connection error occured. Let's try again next cycle."
+            logger.warning("A connection error occured. Let's try again next cycle.")
             return BuildStatus.active
 
     def latest_build_url_of(self, name):
