@@ -36,7 +36,7 @@ logger = logging.getLogger('xf_indicator')
 from xf_indicator_lib.PreferencesWindow import PreferencesWindow
 from NewBuildXfIndicatorWindow import NewBuildXfIndicatorWindow
 from NewBuildServerXfIndicatorWindow import NewBuildServerXfIndicatorWindow
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GObject, GdkPixbuf
 
 class PreferencesXfIndicatorWindow(PreferencesWindow):
     __gtype_name__ = "PreferencesXfIndicatorWindow"
@@ -152,17 +152,13 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         for column in old_columns:
             self.buildServerTreeview.remove_column(column)
 
-        build_server_store = Gtk.ListStore(GObject.TYPE_PYOBJECT, GObject.TYPE_PYOBJECT)
+        build_server_store = Gtk.ListStore(GdkPixbuf.Pixbuf, GObject.TYPE_PYOBJECT)
         self.buildServerTreeview.set_model(model=build_server_store)
 
         #build server type column
-        renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn('Type', renderer, text=0)
-        column.set_sort_column_id(0)
-        def extract_build_server_type(column, cell, model, iter, user_data):
-            build_server_type = model.get_value(iter, 0).type()
-            cell.props.text = build_server_type
-        column.set_cell_data_func(renderer, extract_build_server_type)
+        renderer = Gtk.CellRendererPixbuf()
+        column = Gtk.TreeViewColumn('Type', renderer)
+        column.add_attribute(renderer, "pixbuf", 0)
         self.buildServerTreeview.append_column(column)
 
         #build server name column
@@ -175,8 +171,16 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         column.set_cell_data_func(renderer, extract_build_server_name)
         self.buildServerTreeview.append_column(column)
 
+        build_server_images = {
+            "Travis CI": "../data/media/travis.png",
+            "Travis CI Pro": "../data/media/travis.png",
+            "Travis CI Enterprise": "../data/media/travis.png",
+            "Jenkins": "../data/media/jenkins.png"
+        }
+
         for build_server in build_servers:
-            build_server_store.append([build_server, build_server])
+            image = GdkPixbuf.Pixbuf.new_from_file(build_server_images[build_server.type()])
+            build_server_store.append([image, build_server])
 
     def set_callback(self, callback):
         self.return_from_preferences_callback = callback
