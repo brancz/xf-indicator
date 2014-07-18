@@ -36,7 +36,7 @@ logger = logging.getLogger('xf_indicator')
 
 from xf_indicator_lib.NewBuildServerWindow import NewBuildServerWindow
 from project import Project
-from build_server_builder import JenkinsServerBuilder, TravisCIEnterpriseServerBuilder
+from build_server_builder import JenkinsServerBuilder, TravisCIEnterpriseServerBuilder, TravisCIComBuilder
 from gi.repository import Gtk, GObject
 
 class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
@@ -62,6 +62,7 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         self.build_server_type_store = Gtk.ListStore(str)
 
         self.build_server_type_to_builder = {
+            "Travis CI Pro": TravisCIComBuilder,
             "Travis CI Enterprise": TravisCIEnterpriseServerBuilder,
             "Jenkins": JenkinsServerBuilder
         }
@@ -76,8 +77,6 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         self.build_server_type_combobox.pack_start(renderer_text, True)
         self.build_server_type_combobox.add_attribute(renderer_text, "text", 0)
         self.build_server_type_combobox.connect("changed", self.on_build_server_type_changed)
-
-        self.build_server_name_entry = builder.get_object("buildServerNameEntry")
 
         self.connect("delete-event", self.quit)
         self.set_position(Gtk.WindowPosition.CENTER)
@@ -104,8 +103,7 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         self.show_all()
 
     def on_add(self, widget):
-        name = self.build_server_name_entry.get_text()
-        build_server = self.server_builder.build(name)
+        build_server = self.server_builder.build()
         self.add_callback(build_server)
         self.hide()
 

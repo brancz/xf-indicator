@@ -30,7 +30,7 @@ class BuildServerBuilder(object):
     def add_form(self):
         raise NotImplementedError()
 
-    def build(self, name):
+    def build(self):
         raise NotImplementedError()
 
     def remove(self):
@@ -39,6 +39,14 @@ class BuildServerBuilder(object):
 
 class JenkinsServerBuilder(BuildServerBuilder):
     def add_form(self):
+        #name
+        name_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.add(name_row)
+        self.name_label = Gtk.Label("Name", xalign=0)
+        self.name_entry = Gtk.Entry(xalign=0)
+        name_row.pack_start(self.name_label, True, True, 0)
+        name_row.pack_start(self.name_entry, False, True, 0)
+
         #host
         host_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.box.add(host_row)
@@ -73,9 +81,10 @@ class JenkinsServerBuilder(BuildServerBuilder):
         secure_row.pack_start(self.secure_label, True, True, 0)
         secure_row.pack_start(self.secure_check, False, True, 0)
 
-        self.rows = [host_row, user_row, pass_row, secure_row]
+        self.rows = [name_row, host_row, user_row, pass_row, secure_row]
 
-    def build(self, name):
+    def build(self):
+        name = self.name_entry.get_text()
         host = self.host_entry.get_text()
         username = self.user_entry.get_text()
         password = self.pass_entry.get_text()
@@ -84,6 +93,15 @@ class JenkinsServerBuilder(BuildServerBuilder):
 
 class TravisCIEnterpriseServerBuilder(BuildServerBuilder):
     def add_form(self):
+        #name
+        name_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.box.add(name_row)
+        self.name_label = Gtk.Label("Name", xalign=0)
+        self.name_entry = Gtk.Entry(xalign=0)
+        name_row.pack_start(self.name_label, True, True, 0)
+        name_row.pack_start(self.name_entry, False, True, 0)
+
+        #host
         host_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
         self.box.add(host_row)
         self.host_label = Gtk.Label("Host", xalign=0)
@@ -91,7 +109,34 @@ class TravisCIEnterpriseServerBuilder(BuildServerBuilder):
         host_row.pack_start(self.host_label, True, True, 0)
         host_row.pack_start(self.host_entry, False, True, 0)
 
-        self.rows = [host_row]
+        #token
+        token_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
+        self.box.add(token_row)
+        self.token_label = Gtk.Label("Token", xalign=0)
+        self.token_entry = Gtk.Entry(xalign=0)
+        token_row.pack_start(self.token_label, True, True, 0)
+        token_row.pack_start(self.token_entry, False, True, 0)
 
-    def build(self, name):
-        return JenkinsBuildServer("https://ci.pondati.net/", username="flower-pot", password="Asdfmnsek123!", verify=False)
+        self.rows = [name_row, host_row, token_row]
+
+    def build(self):
+        name = self.name_entry.get_text()
+        host = self.host_entry.get_text()
+        token = self.token_entry.get_text()
+        return TravisCIEnterprise(name, host, token)
+
+class TravisCIComBuilder(BuildServerBuilder):
+    def add_form(self):
+        #token
+        token_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
+        self.box.add(token_row)
+        self.token_label = Gtk.Label("Token", xalign=0)
+        self.token_entry = Gtk.Entry(xalign=0)
+        token_row.pack_start(self.token_label, True, True, 0)
+        token_row.pack_start(self.token_entry, False, True, 0)
+
+        self.rows = [token_row]
+
+    def build(self):
+        token = self.token_entry.get_text()
+        return TravisCICom(token)
