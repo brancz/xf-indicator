@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-18 17:09+0200\n"
+"POT-Creation-Date: 2014-07-20 20:11-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,56 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../data/ui/NewBuildXfIndicatorWindow.ui.h:1
+#: ../data/ui/NewBuildServerXfIndicatorWindow.ui.h:1
+msgid "Build Server Type"
+msgstr ""
+
+#: ../data/ui/NewBuildXfIndicatorWindow.ui.h:2
+msgid "Build Name"
+msgstr ""
+
+#: ../data/ui/NewBuildXfIndicatorWindow.ui.h:3
+msgid "ADD"
+msgstr ""
+
 #: ../xf-indicator.desktop.in.h:1
 msgid "Xf Indicator"
 msgstr ""
 
 #: ../xf-indicator.desktop.in.h:2
 msgid "XfIndicator application"
+msgstr ""
+
+#: ../data/ui/HelpXfIndicatorDialog.ui.h:1
+msgid "Help"
+msgstr ""
+
+#. code for other initialization actions should be added here
+#: ../data/ui/PreferencesXfIndicatorWindow.ui.h:1
+msgid "Add"
+msgstr ""
+
+#: ../data/ui/PreferencesXfIndicatorWindow.ui.h:2
+msgid "Remove"
+msgstr ""
+
+#: ../data/ui/PreferencesXfIndicatorWindow.ui.h:3
+msgid "Builds"
+msgstr ""
+
+#: ../data/ui/PreferencesXfIndicatorWindow.ui.h:4
+msgid "Build Server"
+msgstr ""
+
+#: ../data/ui/PreferencesXfIndicatorWindow.ui.h:5
+msgid "Autostart"
+msgstr ""
+
+#: ../data/ui/PreferencesXfIndicatorWindow.ui.h:6
+msgid "Refresh Interval (Seconds)"
+msgstr ""
+
+#: ../data/ui/PreferencesXfIndicatorWindow.ui.h:7
+msgid "General"
 msgstr ""
