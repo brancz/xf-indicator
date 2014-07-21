@@ -26,17 +26,26 @@
 # data/glib-2.0/schemas/net.launchpad.xf-indicator.gschema.xml
 # See http://developer.gnome.org/gio/stable/GSettings.html for more info.
 
-from gi.repository import Gio # pylint: disable=E0611
+from gi.repository import Gio, GLib # pylint: disable=E0611
 
 from locale import gettext as _
 
 import logging
 logger = logging.getLogger('xf_indicator')
 
+import os
+
 from xf_indicator_lib.PreferencesWindow import PreferencesWindow
 from NewBuildXfIndicatorWindow import NewBuildXfIndicatorWindow
 from NewBuildServerXfIndicatorWindow import NewBuildServerXfIndicatorWindow
 from gi.repository import Gtk, GObject, GdkPixbuf
+from xf_indicator_lib.helpers import get_media_file
+
+autostart_dir = os.path.join(GLib.get_user_config_dir(),"autostart/")
+autostart_template = "xf-indicator-autostart.desktop"
+autostart_file = get_media_file(autostart_template)
+autostart_file = autostart_file.replace("file:///", '')
+installed_file = os.path.join(autostart_dir, autostart_template)
 
 class PreferencesXfIndicatorWindow(PreferencesWindow):
     __gtype_name__ = "PreferencesXfIndicatorWindow"
@@ -66,6 +75,10 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         self.set_position(Gtk.WindowPosition.CENTER)
 
         self.generalSettingsBox = builder.get_object("generalSettingsBox")
+        self.autostart_switch = builder.get_object("autostartSwitch")
+        self.autostart_switch.connect("notify::active", self.on_autostart_switch_activate)
+        if os.path.isfile(installed_file):
+            self.autostart_switch.set_active(True)
 
         self.show_all()
 
