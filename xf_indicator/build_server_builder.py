@@ -146,10 +146,19 @@ class TravisCIEnterpriseServerBuilder(BuildServerBuilder):
         self.rows = [name_row, host_row, token_row]
 
     def build(self):
-        name = self.name_entry.get_text()
-        host = self.host_entry.get_text()
-        token = self.token_entry.get_text()
+        name = self.name_entry.get_text().strip()
+        host = self.host_entry.get_text().strip()
+        token = self.token_entry.get_text().strip()
         return TravisCIEnterprise(name, host, token)
+
+    def validate(self, name, host, token):
+        errors = []
+        if not name:
+            errors.append("Name must not be empty")
+        if not host:
+            errors.append("Host must not be empty")
+        if not token:
+            errors.append("Token must not be empty")
 
 class TravisCIComBuilder(BuildServerBuilder):
     def add_form(self):
@@ -165,4 +174,6 @@ class TravisCIComBuilder(BuildServerBuilder):
 
     def build(self):
         token = self.token_entry.get_text()
+        if not token:
+            raise ValueError("Token must not be empty")
         return TravisCICom(token)
