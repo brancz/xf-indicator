@@ -47,6 +47,9 @@ class BuildServer(object):
     def type(self):
         raise NotImplementedError()
 
+    def deletable(self):
+        return True
+
 class TravisCIServer(BuildServer):
     def __init__(self, name, base_url, base_api_url, token):
         super(TravisCIServer, self).__init__(name)
@@ -91,6 +94,9 @@ class TravisCIOrg(TravisCIServer):
 
     def type(self):
         return "Travis CI"
+
+    def deletable(self):
+        return False
 
 class TravisCICom(TravisCIServer):
     def __init__(self, token):
