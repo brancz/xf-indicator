@@ -21,6 +21,8 @@
 ### END LICENSE
 
 from build_server import JenkinsBuildServer, TravisCIEnterprise, TravisCICom 
+import requests
+import jenkinsapi
 from gi.repository import Gtk
 
 class BuildServerBuilder(object):
@@ -84,12 +86,36 @@ class JenkinsServerBuilder(BuildServerBuilder):
         self.rows = [name_row, host_row, user_row, pass_row, secure_row]
 
     def build(self):
-        name = self.name_entry.get_text()
-        host = self.host_entry.get_text()
-        username = self.user_entry.get_text()
-        password = self.pass_entry.get_text()
+        name = self.name_entry.get_text().strip()
+        host = self.host_entry.get_text().strip()
+        username = self.user_entry.get_text().strip()
+        password = self.pass_entry.get_text().strip()
         secure = self.secure_check.get_active()
-        return JenkinsBuildServer(name, host, username=username, password=password, verify=secure)
+        errors = self.validate(name)
+        try:
+            server = JenkinsBuildServer(name, host, username=username, password=password, verify=secure)
+        except requests.exceptions.MissingSchema:
+            errors.append("You must specify http:// or https:// in the host")
+        except requests.exceptions.SSLError:
+            errors.append("It seems like this ssl certificate is not signed")
+        except requests.exceptions.ConnectionError:
+            errors.append("Invalid host")
+        except AssertionError:
+            errors.append("Cannot set a username without a password!")
+        except jenkinsapi.custom_exceptions.JenkinsAPIException:
+            errors.append("Invalid authentication")
+        if errors:
+            raise ValueError('\n\n'.join(errors))
+        return server
+
+    def validate(self, name):
+        errors = []
+        self.validate_name(name, errors)
+        return errors
+
+    def validate_name(self, name, errors):
+        if not name:
+            errors.append("Name must not be empty")
 
 class TravisCIEnterpriseServerBuilder(BuildServerBuilder):
     def add_form(self):

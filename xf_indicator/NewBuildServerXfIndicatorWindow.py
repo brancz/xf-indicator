@@ -103,16 +103,19 @@ class NewBuildServerXfIndicatorWindow(NewBuildServerWindow):
         self.show_all()
 
     def on_add(self, widget):
-        build_server = self.server_builder.build()
-        self.add_callback(build_server)
-        self.hide()
+        try:
+            build_server = self.server_builder.build()
+            self.add_callback(build_server)
+            self.hide()
+        except ValueError as e:
+            Gtk.MessageDialog(text=str(e), parent=self).show_all()
 
     def quit(self, window, event):
         window.hide()
         return True
 
     def on_enter_pressed(self, widget):
-        self.add_and_hide()
+        self.on_add(None)
 
     def set_callback(self, callback):
         self.add_callback = callback
