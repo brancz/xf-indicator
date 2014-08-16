@@ -50,12 +50,15 @@ def get_builder(builder_file_name):
 
 
 # Owais Lone : To get quick access to icons and stuff.
-def get_media_file(media_file_name):
+def get_media_file(media_file_name, file_path=True):
     media_filename = get_data_file('media', '%s' % (media_file_name,))
     if not os.path.exists(media_filename):
         media_filename = None
 
-    return "file:///"+media_filename
+    if file_path:
+        return "file:///"+media_filename
+    if not file_path:
+        return media_filename
 
 class NullHandler(logging.Handler):
     def emit(self, record):

@@ -186,10 +186,10 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         self.buildServerTreeview.append_column(column)
 
         build_server_images = {
-            "Travis CI": "../data/media/travis.png",
-            "Travis CI Pro": "../data/media/travis.png",
-            "Travis CI Enterprise": "../data/media/travis.png",
-            "Jenkins": "../data/media/jenkins.png"
+            "Travis CI": get_media_file("travis.png", file_path=False),
+            "Travis CI Pro": get_media_file("travis.png", file_path=False),
+            "Travis CI Enterprise": get_media_file("travis.png", file_path=False),
+            "Jenkins": get_media_file("jenkins.png", file_path=False)
         }
 
         for build_server in build_servers:
