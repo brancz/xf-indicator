@@ -26,8 +26,6 @@ from sets import Set
 import yaml
 import os
 
-#CONFIG_FILE=os.path.expanduser("~/.xf-indicator.yaml")
-
 class ProjectList(StatusSubject):
 
     def __init__(self):
@@ -43,9 +41,8 @@ class ProjectList(StatusSubject):
     def remove(self, project):
         self.projects.remove(project)
 
-    def refresh_build_status(self):
-        extract_build_status = lambda project: project.refresh_build_status()
-        statuses = map(extract_build_status, self.projects)
+    def build_status(self):
+        statuses = map(lambda project: project.build_status(), self.projects)
         try:
             # the worst status is the smallest one
             status = min(statuses)

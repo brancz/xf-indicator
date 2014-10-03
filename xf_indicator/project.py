@@ -45,7 +45,7 @@ class Project(StatusSubject):
             self.status = new_status
             self.notify(new_status)
 
-    def refresh_build_status(self):
+    def build_status(self):
         status = self.build_server.latest_status_of(self.name)
         self.set_status(status)
         return status

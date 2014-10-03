@@ -91,7 +91,7 @@ class Indicator(StatusSubject):
         menu.append(item)
 
     def setup_refresh_timer(self):
-        self.refresh_timer = TimerWithResume(self.projects.refresh_build_status)
+        self.refresh_timer = TimerWithResume(self.projects.build_status)
         self.refresh_timer.start()
 
     def quit(self, widget):
