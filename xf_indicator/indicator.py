@@ -24,7 +24,7 @@ import requests
 import sys
 import threading
 
-from project_list import ProjectList
+from project import ProjectList
 from build_server import BuildServerList
 from build_status import BuildStatus
 from timer_with_resume import TimerWithResume

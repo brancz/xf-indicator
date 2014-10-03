@@ -21,6 +21,36 @@
 ### END LICENSE
 
 from status_subject import StatusSubject
+from build_status import BuildStatus
+from sets import Set
+
+class ProjectList(StatusSubject):
+
+    def __init__(self):
+        self.projects = Set()
+        self.status = None
+
+    def __iter__(self):
+        return self.projects.__iter__()
+
+    def add(self, project):
+        self.projects.add(project)
+
+    def remove(self, project):
+        self.projects.remove(project)
+
+    def build_status(self):
+        statuses = map(lambda project: project.build_status(), self.projects)
+        try:
+            # the worst status is the smallest one
+            status = min(statuses)
+        except ValueError:
+            # occurs when statuses is empty, thus don't show an error
+            status = BuildStatus.passing
+        if self.status is not status:
+            self.status = status
+            self.notify(status)
+        return self.status
 
 class Project(StatusSubject):
     def __init__(self, name, build_server):
