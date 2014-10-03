@@ -31,6 +31,23 @@ from jenkinsapi.custom_exceptions import NoBuildData
 from jenkinsapi.custom_exceptions import UnknownJob
 from build_status import BuildStatus
 
+class BuildServerList(object):
+    def __init__(self):
+        self.build_servers = []
+        self.build_servers.append(TravisCIOrg())
+
+    def get(self, index):
+        return self.build_servers[index]
+
+    def add(self, build_server):
+        self.build_servers.append(build_server)
+
+    def remove(self, build_server):
+        self.build_servers.remove(build_server)
+
+    def __iter__(self):
+        return self.build_servers.__iter__()
+
 class BuildServer(object):
     def __init__(self, name):
         self.name = name

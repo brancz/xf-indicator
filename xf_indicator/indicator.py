@@ -25,7 +25,7 @@ import sys
 import threading
 
 from project_list import ProjectList
-from build_server_list import BuildServerList
+from build_server import BuildServerList
 from build_status import BuildStatus
 from timer_with_resume import TimerWithResume
 from help_dialog import XfIndicatorHelpDialog
