@@ -27,8 +27,7 @@ import json, requests
 from urlparse import urljoin
 import jenkinsapi.jenkins
 from jenkinsapi.utils.requester import Requester
-from jenkinsapi.custom_exceptions import NoBuildData
-from jenkinsapi.custom_exceptions import UnknownJob
+from jenkinsapi.custom_exceptions import NoBuildData, UnknownJob
 from build_status import BuildStatus
 
 class BuildServerList(object):
