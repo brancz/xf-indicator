@@ -25,7 +25,7 @@ from locale import gettext as _
 import logging
 logger = logging.getLogger('xf_indicator')
 
-from xf_indicator_lib.HelpDialog import HelpDialog
+from xf_indicator_lib.help_dialog import HelpDialog
 from build_status import BuildStatus
 
 # See xf_indicator_lib.HelpDialog.py for more details about how this class works.

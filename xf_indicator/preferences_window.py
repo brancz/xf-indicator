@@ -35,9 +35,9 @@ logger = logging.getLogger('xf_indicator')
 
 import os
 
-from xf_indicator_lib.PreferencesWindow import PreferencesWindow
-from NewBuildXfIndicatorWindow import NewBuildXfIndicatorWindow
-from NewBuildServerXfIndicatorWindow import NewBuildServerXfIndicatorWindow
+from xf_indicator_lib.preferences_window import PreferencesWindow
+from new_build_window import NewBuildXfIndicatorWindow
+from new_build_server_window import NewBuildServerXfIndicatorWindow
 from gi.repository import Gtk, GObject, GdkPixbuf
 from xf_indicator_lib.helpers import get_media_file
 

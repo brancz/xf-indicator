@@ -27,7 +27,7 @@ import logging
 import os
 
 from . xf_indicatorconfig import get_data_file
-from . Builder import Builder
+from . builder import Builder
 
 from locale import gettext as _
 

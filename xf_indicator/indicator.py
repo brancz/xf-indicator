@@ -28,8 +28,8 @@ from project_list import ProjectList
 from build_server_list import BuildServerList
 from build_status import BuildStatus
 from timer_with_resume import TimerWithResume
-from XfIndicatorHelpDialog import XfIndicatorHelpDialog
-from PreferencesXfIndicatorWindow import PreferencesXfIndicatorWindow
+from help_dialog import XfIndicatorHelpDialog
+from preferences_window import PreferencesXfIndicatorWindow
 from project_menu_item import ProjectMenuItem
 from status_subject import StatusSubject
 from gi.repository import AppIndicator3

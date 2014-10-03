@@ -34,7 +34,7 @@ from locale import gettext as _
 import logging
 logger = logging.getLogger('xf_indicator')
 
-from xf_indicator_lib.NewBuildServerWindow import NewBuildServerWindow
+from xf_indicator_lib.new_build_server_window import NewBuildServerWindow
 from project import Project
 from build_server_builder import JenkinsServerBuilder, TravisCIEnterpriseServerBuilder, TravisCIComBuilder
 from gi.repository import Gtk, GObject

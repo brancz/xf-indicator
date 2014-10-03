@@ -33,7 +33,7 @@ from locale import gettext as _
 import logging
 logger = logging.getLogger('xf_indicator')
 
-from xf_indicator_lib.NewBuildWindow import NewBuildWindow
+from xf_indicator_lib.new_build_window import NewBuildWindow
 from project import Project
 from gi.repository import Gtk
 
