@@ -36,7 +36,7 @@ logger = logging.getLogger('xf_indicator')
 import os
 
 from xf_indicator_lib.preferences_window import PreferencesWindow
-from new_project_window import NewProjectXfIndicatorWindow
+from add_project_window import AddProjectXfIndicatorWindow
 from new_build_server_window import NewBuildServerXfIndicatorWindow
 from gi.repository import Gtk, GObject, GdkPixbuf
 from xf_indicator_lib.helpers import get_media_file
@@ -88,12 +88,12 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         return True
 
     def on_add_project(self, widget):
-        new_project_window = NewProjectXfIndicatorWindow()
-        new_project_window.set_build_servers(self.build_servers)
-        new_project_window.set_add_callback(self.new_project_callback)
-        new_project_window.present()
+        add_project_window = AddProjectXfIndicatorWindow()
+        add_project_window.set_build_servers(self.build_servers)
+        add_project_window.set_add_callback(self.add_project_callback)
+        add_project_window.present()
 
-    def new_project_callback(self, project):
+    def add_project_callback(self, project):
         self.projects.add(project)
         self.set_projects(self.projects)
 

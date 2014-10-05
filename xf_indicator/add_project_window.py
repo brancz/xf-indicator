@@ -33,23 +33,23 @@ from locale import gettext as _
 import logging
 logger = logging.getLogger('xf_indicator')
 
-from xf_indicator_lib.new_project_window import NewProjectWindow
+from xf_indicator_lib.add_project_window import AddProjectWindow
 from project import Project
 from gi.repository import Gtk
 
-class NewProjectXfIndicatorWindow(NewProjectWindow):
-    __gtype_name__ = "NewProjectXfIndicatorWindow"
+class AddProjectXfIndicatorWindow(AddProjectWindow):
+    __gtype_name__ = "AddProjectXfIndicatorWindow"
     _instance = None
 
     @classmethod
     def instance(self):
-        if NewProjectXfIndicatorWindow._instance is None:
-            NewProjectXfIndicatorWindow._instance = NewProjectXfIndicatorWindow()
-        return NewProjectXfIndicatorWindow._instance
+        if AddProjectXfIndicatorWindow._instance is None:
+            AddProjectXfIndicatorWindow._instance = AddProjectXfIndicatorWindow()
+        return AddProjectXfIndicatorWindow._instance
 
     def finish_initializing(self, builder): # pylint: disable=E1002
         """Set up the new build window"""
-        super(NewProjectXfIndicatorWindow, self).finish_initializing(builder)
+        super(AddProjectXfIndicatorWindow, self).finish_initializing(builder)
 
         # Code for other initialization actions should be added here.
 
