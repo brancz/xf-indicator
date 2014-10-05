@@ -31,8 +31,8 @@ logger = logging.getLogger('xf_indicator_lib')
 
 from . helpers import get_builder, show_uri, get_help_uri
 
-class NewBuildWindow(Gtk.Window):
-    __gtype_name__ = "NewBuildWindow"
+class NewProjectWindow(Gtk.Window):
+    __gtype_name__ = "NewProjectWindow"
 
     def __new__(cls):
         """Special static method that's automatically called by Python when 
@@ -40,8 +40,8 @@ class NewBuildWindow(Gtk.Window):
         
         Returns a fully instantiated NewBuildWindow object.
         """
-        builder = get_builder('NewBuildXfIndicatorWindow')
-        new_object = builder.get_object("new_build_xf_indicator_window")
+        builder = get_builder('NewProjectXfIndicatorWindow')
+        new_object = builder.get_object("new_project_xf_indicator_window")
         new_object.finish_initializing(builder)
         return new_object
 

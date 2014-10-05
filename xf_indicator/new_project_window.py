@@ -33,31 +33,31 @@ from locale import gettext as _
 import logging
 logger = logging.getLogger('xf_indicator')
 
-from xf_indicator_lib.new_build_window import NewBuildWindow
+from xf_indicator_lib.new_project_window import NewProjectWindow
 from project import Project
 from gi.repository import Gtk
 
-class NewBuildXfIndicatorWindow(NewBuildWindow):
-    __gtype_name__ = "NewBuildXfIndicatorWindow"
+class NewProjectXfIndicatorWindow(NewProjectWindow):
+    __gtype_name__ = "NewProjectXfIndicatorWindow"
     _instance = None
 
     @classmethod
     def instance(self):
-        if NewBuildXfIndicatorWindow._instance is None:
-            NewBuildXfIndicatorWindow._instance = NewBuildXfIndicatorWindow()
-        return NewBuildXfIndicatorWindow._instance
+        if NewProjectXfIndicatorWindow._instance is None:
+            NewProjectXfIndicatorWindow._instance = NewProjectXfIndicatorWindow()
+        return NewProjectXfIndicatorWindow._instance
 
     def finish_initializing(self, builder): # pylint: disable=E1002
         """Set up the new build window"""
-        super(NewBuildXfIndicatorWindow, self).finish_initializing(builder)
+        super(NewProjectXfIndicatorWindow, self).finish_initializing(builder)
 
         # Code for other initialization actions should be added here.
 
         self.build_server_combobox = builder.get_object("buildServerCombobox")
-        self.build_name_entry = builder.get_object("buildNameEntry")
-        self.build_name_entry.connect("activate", self.on_enter_pressed)
-        self.add_build_button = builder.get_object("addBuildButton")
-        self.add_build_button.connect("clicked", self.on_add_build_button_activate)
+        self.project_name_entry = builder.get_object("projectNameEntry")
+        self.project_name_entry.connect("activate", self.on_enter_pressed)
+        self.add_project_button = builder.get_object("addProjectButton")
+        self.add_project_button.connect("clicked", self.on_add_project_button_activate)
 
         self.connect("delete-event", self.quit)
         self.set_position(Gtk.WindowPosition.CENTER)
@@ -71,11 +71,11 @@ class NewBuildXfIndicatorWindow(NewBuildWindow):
     def on_enter_pressed(self, widget):
         self.add_and_hide()
 
-    def on_add_build_button_activate(self, widget):
+    def on_add_project_button_activate(self, widget):
         self.add_and_hide()
     
     def add_and_hide(self):
-        project_name = self.build_name_entry.get_text()
+        project_name = self.project_name_entry.get_text()
         if not project_name:
             # please provide a build-name
             return

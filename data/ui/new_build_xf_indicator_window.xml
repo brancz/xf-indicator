@@ -1,9 +1,0 @@
-<glade-catalog name="new_build_xf_indicator_window" domain="glade-3" 
-               depends="gtk+" version="1.0">
-  <glade-widget-classes>
-    <glade-widget-class title="Xf Indicator New Build Window" name="NewBuildXfIndicatorWindow" 
-                        generic-name="NewBuildXfIndicatorWindow" parent="GtkWindow"
-                        icon-name="widget-gtk-window"/>
-  </glade-widget-classes>
-
-</glade-catalog>
