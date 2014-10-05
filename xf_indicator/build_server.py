@@ -47,28 +47,9 @@ class BuildServerList(object):
     def __iter__(self):
         return self.build_servers.__iter__()
 
-class BuildServer(object):
-    def __init__(self, name):
-        self.name = name
-
-    def __str__(self):
-        return self.name
-
-    def latest_status_of(self, name):
-        raise NotImplementedError()
-
-    def latest_build_url_of(self, name):
-        raise NotImplementedError()
-
-    def type(self):
-        raise NotImplementedError()
-
-    def deletable(self):
-        return True
-
-class TravisCIServer(BuildServer):
+class TravisCIServer(object):
     def __init__(self, name, base_url, base_api_url, token):
-        super(TravisCIServer, self).__init__(name)
+        self.name = name
         self.base_url = base_url
         self.base_api_url = base_api_url
         self.token = token
@@ -96,10 +77,15 @@ class TravisCIServer(BuildServer):
     def latest_build_url_of(self, name):
         return urljoin(self.base_url,  name)
 
+    def deletable(self):
+        return True
+
+    def __str__(self):
+        return self.name
+
 class TravisCIEnterprise(TravisCIServer):
     def __init__(self, name, base_url, token):
-        base_api_url = urljoin(base_url, "/api")
-        super(TravisCIEnterprise, self).__init__("Travis CI", base_url, api_url, token)
+        super(TravisCIEnterprise, self).__init__("Travis CI", base_url, urljoin(base_url, "/api"), token)
 
     def type(self):
         return "Travis CI Enterprise"
@@ -131,7 +117,7 @@ class SSLRequester(Requester):
         requestKWargs['verify'] = self.verify
         return requestKWargs
 
-class JenkinsBuildServer(BuildServer):
+class JenkinsBuildServer(object):
     def __init__(self, name, url, username=None, password=None, verify=True):
         self.name = name
         self.url = url
@@ -154,6 +140,12 @@ class JenkinsBuildServer(BuildServer):
 
     def latest_build_url_of(self, name):
         return urljoin(self.url, "/job/" + name + "/lastBuild/")
+
+    def deletable(self):
+        return True
+
+    def __str__(self):
+        return self.name
 
     def type(self):
         return "Jenkins"

@@ -25,9 +25,6 @@ from sets import Set
 class StatusSubject(object):
     observers = None
 
-    def build_status(self, name):
-        raise NotImplementedError()
-
     def register_on_status_changed(self, observer):
         self._observers().add(observer)
 

@@ -27,7 +27,6 @@
 # See http://developer.gnome.org/gio/stable/GSettings.html for more info.
 
 from gi.repository import Gio # pylint: disable=E0611
-from build_server import BuildServer
 
 from locale import gettext as _
 

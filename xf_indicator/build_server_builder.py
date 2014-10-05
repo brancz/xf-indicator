@@ -29,12 +29,6 @@ class BuildServerBuilder(object):
     def __init__(self, box):
         self.box = box
 
-    def add_form(self):
-        raise NotImplementedError()
-
-    def build(self):
-        raise NotImplementedError()
-
     def remove(self):
         for row in self.rows:
             self.box.remove(row)
