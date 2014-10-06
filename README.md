@@ -12,8 +12,8 @@ whenever a build is done, but only changes the icon whenever a status changes.
 Features
 --------
 
-- Add travis-ci.org repositories to watch
+- Add travis-ci.org/travis-ci.com/Travis Enterprise/Jenkins builds to watch
 - Open latest build status in webbrowser
 - Aggregate worst build status to be shown at top level
-    * Order of Buildstatuses from worst to best: Failure, Not existing, Errored, Success
-- Preferences window for adding/removing builds to watch
+    * Order of Buildstatuses from worst to best: Failure, Not existing, Errored (e.g. library could not be loaded), Success
+- Preferences window for adding/removing builds to watch, managing build servers and general settings
