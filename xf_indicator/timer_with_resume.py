@@ -20,20 +20,18 @@
 # THE SOFTWARE.
 ### END LICENSE
 
-import time
 from threading import Thread, Event
 
-REFRESH_INTERVAL = 10
-
 class TimerWithResume(object):
-    def __init__(self, status_subject):
+    def __init__(self, status_subject, refresh_interval):
         self.status_subject = status_subject
         self.abort = Event()
+        self.refresh_interval = refresh_interval
 
     def perform(self):
         while not self.abort.isSet():
             self.status_subject.build_status()
-            self.abort.wait(REFRESH_INTERVAL)
+            self.abort.wait(self.refresh_interval)
 
     def stop(self):
         self.abort.set()
@@ -47,3 +45,6 @@ class TimerWithResume(object):
         self.thread.join()
         self.abort.clear()
         self.start()
+
+    def set_refresh_interval(self, new_interval):
+        self.refresh_interval = new_interval

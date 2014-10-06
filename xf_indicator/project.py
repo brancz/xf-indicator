@@ -77,6 +77,7 @@ class Project(StatusSubject):
 
     def build_status(self):
         status = self.build_server.latest_status_of(self.name)
+        print "{0}: {1}".format(self, status)
         self.set_status(status)
         return status
 
