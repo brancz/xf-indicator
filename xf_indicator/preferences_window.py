@@ -80,10 +80,15 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
         if os.path.isfile(installed_file):
             self.autostart_switch.set_active(True)
 
+        self.refresh_interval_spinbutton = builder.get_object("refreshIntervalSpinbutton")
+        self.refresh_interval_spinbutton.set_numeric(True)
+        adjustment = Gtk.Adjustment(0, 0, 999, 1, 10, 0)
+        self.refresh_interval_spinbutton.set_adjustment(adjustment)
+
         self.show_all()
 
     def quit(self, window, event):
-        self.return_from_preferences_callback(self.projects, self.build_servers)
+        self.return_from_preferences_callback(self.projects, self.build_servers, self.refresh_interval_spinbutton.get_value_as_int())
         window.hide()
         return True
 

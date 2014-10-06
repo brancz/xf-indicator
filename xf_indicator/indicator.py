@@ -66,10 +66,11 @@ class Indicator(StatusSubject):
         help_dialog = XfIndicatorHelpDialog.instance()
         help_dialog.present()
 
-    def return_from_preferences_callback(self, new_projects, new_build_servers):
+    def return_from_preferences_callback(self, new_projects, new_build_servers, new_refresh_interval):
         self.new_projects = new_projects
         self.build_servers = new_build_servers
         self.indicator.set_menu(self.build_menu())
+        self.refresh_timer.set_refresh_interval(new_refresh_interval)
         self.refresh_timer.resume()
 
     def build_menu(self):
@@ -91,7 +92,7 @@ class Indicator(StatusSubject):
         menu.append(item)
 
     def setup_refresh_timer(self):
-        self.refresh_timer = TimerWithResume(self.projects)
+        self.refresh_timer = TimerWithResume(self.projects, 10)
         self.refresh_timer.start()
 
     def quit(self, widget):
