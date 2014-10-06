@@ -34,7 +34,7 @@ class ProjectMenuItem(Gtk.ImageMenuItem):
         self.show()
         BuildStatus.active.set_menu_item_icon(self)
 
-    def on_status_changed(self, new_status):
+    def on_status_changed(self, subject, new_status):
         new_status.set_menu_item_icon(self)
 
     def on_project_activate(self, widget):

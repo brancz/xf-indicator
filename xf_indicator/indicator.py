@@ -51,7 +51,7 @@ class Indicator(StatusSubject):
 
         self.setup_refresh_timer()
 
-    def on_status_changed(self, new_status):
+    def on_status_changed(self, subject, new_status):
         new_status.set_indicator_icon(self.indicator)
 
     def on_preferences_activate(self, widget):
@@ -91,7 +91,7 @@ class Indicator(StatusSubject):
         menu.append(item)
 
     def setup_refresh_timer(self):
-        self.refresh_timer = TimerWithResume(self.projects.build_status)
+        self.refresh_timer = TimerWithResume(self.projects)
         self.refresh_timer.start()
 
     def quit(self, widget):

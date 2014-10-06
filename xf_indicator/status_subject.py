@@ -33,7 +33,7 @@ class StatusSubject(object):
 
     def notify(self, new_status):
         for observer in self._observers():
-            observer.on_status_changed(new_status)
+            observer.on_status_changed(self, new_status)
 
     def _observers(self):
         if self.observers is None:

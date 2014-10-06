@@ -26,13 +26,13 @@ from threading import Thread, Event
 REFRESH_INTERVAL = 10
 
 class TimerWithResume(object):
-    def __init__(self, function):
-        self.function = function
+    def __init__(self, status_subject):
+        self.status_subject = status_subject
         self.abort = Event()
 
     def perform(self):
         while not self.abort.isSet():
-            self.function()
+            self.status_subject.build_status()
             self.abort.wait(REFRESH_INTERVAL)
 
     def stop(self):
