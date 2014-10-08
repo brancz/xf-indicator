@@ -24,15 +24,13 @@ from gi.repository import Gtk, GObject
 from enum import Enum
 
 class BuildStatus(Enum):
-    active       = (1, "ubuntuone-client-updating", "Updating the build status...")
-    failing      = (2, "ubuntuone-client-error",    "The latest build has failed.")
-    not_existing = (3, "ubuntuone-client-offline",  "No latest build status has been found.")
-    unknown      = (4, "ubuntuone-client-paused",   "The latest build status is unknown.")
-    passing      = (5, "ubuntuone-client-idle",     "The latest build has passed.")
+    active       = (1)
+    failing      = (2)
+    not_existing = (3)
+    unknown      = (4)
+    passing      = (5)
 
-    def __init__(self, number, icon_name, description):
-        self.icon_name = icon_name
-        self.description = description
+    def __init__(self, number):
         self._value_ = number
 
     def __ge__(self, other):
@@ -59,19 +57,3 @@ class BuildStatus(Enum):
         if self.__class__ is other.__class__:
             return self.value == other.value
         return NotImplemented
-
-    def set_indicator_icon(self, indicator):
-        GObject.idle_add(lambda: indicator.set_icon(self.icon_name))
-
-    def set_icon_name(self, gtk_object):
-        GObject.idle_add(lambda: gtk_object.set_from_icon_name(self.icon_name, Gtk.IconSize.MENU))
-
-    def set_menu_item_icon(self, menu_item):
-        img = Gtk.Image.new_from_icon_name(self.icon_name, Gtk.IconSize.MENU)
-        GObject.idle_add(lambda: menu_item.set_image(img))
-
-    def set_text(self, gtk_object):
-        GObject.idle_add(lambda: gtk_object.set_text(self.description))
-
-    def __str__(self):
-        return self.name

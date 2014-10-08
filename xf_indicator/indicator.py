@@ -26,7 +26,7 @@ import threading
 
 from project import ProjectList
 from build_server import BuildServerList
-from build_status import BuildStatus
+from ui_build_status import UiBuildStatus
 from timer_with_resume import TimerWithResume
 from help_dialog import XfIndicatorHelpDialog
 from preferences_window import PreferencesXfIndicatorWindow
@@ -52,7 +52,8 @@ class Indicator(StatusSubject):
         self.setup_refresh_timer()
 
     def on_status_changed(self, subject, new_status):
-        new_status.set_indicator_icon(self.indicator)
+        ui_build_status = UiBuildStatus(new_status)
+        ui_build_status.set_indicator_icon(self.indicator)
 
     def on_preferences_activate(self, widget):
         preferences_window = PreferencesXfIndicatorWindow.instance()
