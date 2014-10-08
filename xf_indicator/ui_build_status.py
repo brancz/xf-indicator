@@ -25,13 +25,13 @@ from build_status import BuildStatus
 
 class UiBuildStatus(object):
 
-    def __init__(self, build_status):
-        information = self._information_by_build_status(build_status)
-        self.icon_name = information["icon_name"]
-        self.description = information["description"]
+    def __init__(self, icon_name, description):
+        self.icon_name = icon_name
+        self.description = description
 
-    def _information_by_build_status(self, build_status):
-        information = {
+    @classmethod
+    def by_build_status(cls, build_status):
+        info = {
             BuildStatus.active: {
                 "icon_name": "ubuntuone-client-updating",
                 "description": "Updating the build status..."
@@ -52,8 +52,8 @@ class UiBuildStatus(object):
                 "icon_name": "ubuntuone-client-idle",
                 "description": "The latest build has passed."
             }
-        }
-        return information[build_status]
+        }[build_status]
+        return UiBuildStatus(info["icon_name"], info["description"])
 
     def set_indicator_icon(self, indicator):
         GObject.idle_add(lambda: indicator.set_icon(self.icon_name))

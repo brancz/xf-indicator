@@ -52,7 +52,7 @@ class Indicator(StatusSubject):
         self.setup_refresh_timer()
 
     def on_status_changed(self, subject, new_status):
-        ui_build_status = UiBuildStatus(new_status)
+        ui_build_status = UiBuildStatus.by_build_status(new_status)
         ui_build_status.set_indicator_icon(self.indicator)
 
     def on_preferences_activate(self, widget):
