@@ -26,8 +26,10 @@ from sets import Set
 
 class ProjectList(StatusSubject):
 
-    def __init__(self):
+    def __init__(self, shelf=None):
         self.projects = Set()
+        if shelf is not None and shelf.has_key("project_list"):
+            self.projects = shelf["project_list"]
         self.status = None
 
     def __iter__(self):
@@ -35,6 +37,9 @@ class ProjectList(StatusSubject):
 
     def add(self, project):
         self.projects.add(project)
+
+    def save(self, shelf):
+        shelf["project_list"] = self.projects
 
     def remove(self, project):
         self.projects.remove(project)
@@ -83,3 +88,8 @@ class Project(StatusSubject):
 
     def latest_build_url(self):
         return self.build_server.latest_build_url_of(self.name)
+
+    def __getstate__(self):
+        odict = self.__dict__.copy()
+        del odict['observers']
+        return odict

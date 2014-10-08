@@ -23,6 +23,7 @@
 import requests
 import sys
 import threading
+import shelve
 
 from project import ProjectList
 from build_server import BuildServerList
@@ -43,9 +44,12 @@ class Indicator(StatusSubject):
 
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
 
-        self.projects = ProjectList()
+        shelf = shelve.open("persistence")
+        self.projects = ProjectList(shelf)
+        self.build_servers = BuildServerList(shelf)
+        shelf.close()
+
         self.projects.register_on_status_changed(self)
-        self.build_servers = BuildServerList()
 
         self.indicator.set_menu(self.build_menu())
 
@@ -97,4 +101,8 @@ class Indicator(StatusSubject):
         self.refresh_timer.start()
 
     def quit(self, widget):
+        shelf = shelve.open("persistence")
+        self.projects.save(shelf)
+        self.build_servers.save(shelf)
+        shelf.close()
         Gtk.main_quit()
