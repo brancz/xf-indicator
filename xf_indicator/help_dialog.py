@@ -27,6 +27,7 @@ logger = logging.getLogger('xf_indicator')
 
 from xf_indicator_lib.help_dialog import HelpDialog
 from build_status import BuildStatus
+from ui_build_status import UiBuildStatus
 
 # See xf_indicator_lib.HelpDialog.py for more details about how this class works.
 class XfIndicatorHelpDialog(HelpDialog):
@@ -48,20 +49,20 @@ class XfIndicatorHelpDialog(HelpDialog):
 
         image = builder.get_object("passing-build-status-image")
         label = builder.get_object("passing-build-status-description")
-        BuildStatus.passing.set_icon_name(image)
-        BuildStatus.passing.set_text(label)
+        UiBuildStatus.by_build_status(BuildStatus.passing).set_icon_name(image)
+        UiBuildStatus.by_build_status(BuildStatus.passing).set_text(label)
 
         image = builder.get_object("unknown-build-status-image")
         label = builder.get_object("unknown-build-status-description")
-        BuildStatus.unknown.set_icon_name(image)
-        BuildStatus.unknown.set_text(label)
+        UiBuildStatus.by_build_status(BuildStatus.unknown).set_icon_name(image)
+        UiBuildStatus.by_build_status(BuildStatus.unknown).set_text(label)
 
         image = builder.get_object("not-existing-build-status-image")
         label = builder.get_object("not-existing-build-status-description")
-        BuildStatus.not_existing.set_icon_name(image)
-        BuildStatus.not_existing.set_text(label)
+        UiBuildStatus.by_build_status(BuildStatus.not_existing).set_icon_name(image)
+        UiBuildStatus.by_build_status(BuildStatus.not_existing).set_text(label)
 
         image = builder.get_object("failing-build-status-image")
         label = builder.get_object("failing-build-status-description")
-        BuildStatus.failing.set_icon_name(image)
-        BuildStatus.failing.set_text(label)
+        UiBuildStatus.by_build_status(BuildStatus.failing).set_icon_name(image)
+        UiBuildStatus.by_build_status(BuildStatus.failing).set_text(label)
