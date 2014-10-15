@@ -65,6 +65,7 @@ class Indicator(StatusSubject):
         preferences_window = PreferencesXfIndicatorWindow.instance()
         preferences_window.set_projects(self.projects)
         preferences_window.set_build_servers(self.build_servers)
+        preferences_window.set_refresh_interval(self.refresh_interval)
         preferences_window.set_callback(self.return_from_preferences_callback)
         preferences_window.present()
         self.refresh_timer.stop()

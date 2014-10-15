@@ -163,6 +163,9 @@ class PreferencesXfIndicatorWindow(PreferencesWindow):
                 self.build_servers.remove(build_server)
                 self.set_build_servers(self.build_servers)
 
+    def set_refresh_interval(self, refresh_interval):
+        self.refresh_interval_spinbutton.set_value(refresh_interval)
+
     def set_build_servers(self, build_servers):
         self.build_servers = build_servers
 
