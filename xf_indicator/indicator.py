@@ -47,13 +47,15 @@ class Indicator(StatusSubject):
         shelf = shelve.open("persistence")
         self.projects = ProjectList(shelf)
         self.build_servers = BuildServerList(shelf)
+        self.refresh_interval = 10
+        if shelf.has_key("refresh_interval"):
+            self.refresh_interval = shelf["refresh_interval"]
         shelf.close()
 
         self.projects.register_on_status_changed(self)
-
         self.indicator.set_menu(self.build_menu())
-
-        self.setup_refresh_timer()
+        self.refresh_timer = self.setup_refresh_timer(self.refresh_interval)
+        self.refresh_timer.start()
 
     def on_status_changed(self, subject, new_status):
         ui_build_status = UiBuildStatus.by_build_status(new_status)
@@ -75,6 +77,7 @@ class Indicator(StatusSubject):
         self.new_projects = new_projects
         self.build_servers = new_build_servers
         self.indicator.set_menu(self.build_menu())
+        self.refresh_interval = new_refresh_interval
         self.refresh_timer.set_refresh_interval(new_refresh_interval)
         self.refresh_timer.resume()
 
@@ -96,13 +99,13 @@ class Indicator(StatusSubject):
         item.show()
         menu.append(item)
 
-    def setup_refresh_timer(self):
-        self.refresh_timer = TimerWithResume(self.projects, 10)
-        self.refresh_timer.start()
+    def setup_refresh_timer(self, interval):
+        return TimerWithResume(self.projects, interval)
 
     def quit(self, widget):
         shelf = shelve.open("persistence")
         self.projects.save(shelf)
         self.build_servers.save(shelf)
+        shelf["refresh_interval"] = self.refresh_interval
         shelf.close()
         Gtk.main_quit()
